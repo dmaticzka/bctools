@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+  # - "3.4"
+sudo: false
+install:
+  # packages for running tests
+  - pip install setuptools
+  - pip install flake8
+  # packages specified by setup.py
+  - pip install .
+script:
+  - flake8 . --exclude=.venv --ignore=E501
+  - nosetests
