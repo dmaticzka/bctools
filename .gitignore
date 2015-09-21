@@ -55,4 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
-testenv_extract_bc
+
+# User specified ignores
+testenv*
