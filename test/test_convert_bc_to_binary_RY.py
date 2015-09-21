@@ -28,8 +28,8 @@ def test_call_fileout():
         "--outfile", outfile
     )
     assert(cmp(
-        datadir + infile,
-        testdir + outfile
+        testdir + outfile,
+        datadir + "converted_bcs.fa"
     ))
 
 
@@ -44,6 +44,6 @@ def test_call_stdout():
     with open(testdir + outfile, "w") as b:
         b.write(run.stdout)
     assert(cmp(
-        datadir + infile,
-        testdir + outfile
+        testdir + outfile,
+        datadir + "converted_bcs.fa"
     ))

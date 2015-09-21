@@ -16,8 +16,11 @@ Status:
 
 import argparse
 import logging
-import re
+from string import maketrans
 from sys import stdout
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.Alphabet import IUPAC
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
@@ -44,6 +47,26 @@ parser.add_argument(
     help="Print lots of debugging information",
     action="store_true")
 
+
+def translate_nt_to_RY(seq):
+    """Translates nucleotides to RY (A,G -> R; C,U,T -> Y).
+
+    >>> translate_nt_to_RY("ACGUTACGUT")
+    RYRYYRYRYY
+    """
+    trans_table = maketrans("AGCUT", "RRYYY")
+    trans_seq = seq.translate(trans_table)
+    logging.debug(seq + " -> " + trans_seq)
+    return trans_seq
+
+
+def translate_nt_to_RY_iterator(robj):
+    """Translate SeqRecords sequences to RY alphabet."""
+    for record in robj:
+        record.seq = Seq(translate_nt_to_RY(str(record.seq)),
+                         IUPAC.unambiguous_dna)
+        yield record
+
 # handle arguments
 args = parser.parse_args()
 if args.debug:
@@ -56,3 +79,11 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
+
+# get input iterator
+input_handle = open(args.infile, "rU")
+input_seq_iterator = SeqIO.parse(input_handle, "fasta")
+convert_seq_iterator = translate_nt_to_RY_iterator(input_seq_iterator)
+output_handle = (open(args.outfile, "w") if args.outfile is not None else stdout)
+SeqIO.write(convert_seq_iterator, output_handle, "fasta")
+output_handle.close()
