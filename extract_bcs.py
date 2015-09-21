@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 tool_description = """
-Exract barcodes from a FASTQ file according to a user-specified pattern. By default output is written to stdout.
+Exract barcodes from a FASTQ file according to a user-specified pattern.
+By default output is written to stdout.
 
 Example usage:
 - move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file output.fastq:
@@ -151,4 +152,7 @@ for header, seq, qual in FastqGeneralIterator(open(args.infile)):
     if args.out_bc_fasta is not None:
         faout.write(">{}\n{}\n".format(header, barcode))
 
+# close files
 samout.close()
+if args.out_bc_fasta is not None:
+    faout.close()
