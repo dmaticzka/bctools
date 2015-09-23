@@ -56,6 +56,38 @@ def test_positional_args_only():
         datadir + "result.fastq"))
 
 
+def test_positional_args_only_verbose():
+    "Extract and remove barcodes with verbose switch enabled, print result to stdout."
+    run = env.run(
+        bindir_rel + "extract_bcs.py",
+        datadir_rel + "reads.fastq",
+        "XXXNNXXX",
+        "--verbose",
+        expect_error=True
+    )
+    with open(testdir + "stdout_only_positional_args.fastq", "w") as b:
+        b.write(run.stdout)
+    assert(cmp(
+        testdir + "stdout_only_positional_args.fastq",
+        datadir + "result.fastq"))
+
+
+def test_positional_args_only_debug():
+    "Extract and remove barcodes with debug switch enabled, print result to stdout."
+    run = env.run(
+        bindir_rel + "extract_bcs.py",
+        datadir_rel + "reads.fastq",
+        "XXXNNXXX",
+        "--debug",
+        expect_error=True
+    )
+    with open(testdir + "stdout_only_positional_args.fastq", "w") as b:
+        b.write(run.stdout)
+    assert(cmp(
+        testdir + "stdout_only_positional_args.fastq",
+        datadir + "result.fastq"))
+
+
 def test_writing_fastq_to_file():
     "Extract and remove barcodes, write result to file."
     env.run(
