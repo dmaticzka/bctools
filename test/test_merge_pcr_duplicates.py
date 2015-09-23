@@ -22,7 +22,7 @@ def test_call_without_parameters():
 
 def test_call_fileout():
     "Call merge_pcr_duplicates.py with infile and outfile."
-    infile = "pcr_dupes.bed"
+    infile = "pcr_dupes_sorted.bed"
     outfile = "merged_pcr_dupes.bed"
     env.run(
         bindir_rel + "merge_pcr_duplicates.py",
@@ -37,7 +37,7 @@ def test_call_fileout():
 
 def test_call_stdout():
     "Call merge_pcr_duplicates.py with infile."
-    infile = "pcr_dupes.bed"
+    infile = "pcr_dupes_sorted.bed"
     outfile = "stdout_merged_pcr_dupes.bed"
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
