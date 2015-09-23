@@ -11,7 +11,8 @@ setup(
     url='https://github.com/tzk/bctools',
     long_description=open('README.md').read(),
     scripts=[
-        "extract_bcs.py",
+        "bin/extract_bcs.py",
+        "bin/convert_bc_to_binary_RY.py"
     ],
     install_requires=[
         "scripttest",
