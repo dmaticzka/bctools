@@ -6,7 +6,7 @@ By default output is written to stdout.
 
 Example usage:
 - move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file output.fastq:
-fastq_exract_barcodes.py barcoded_input.fastq XXXNNXX --out
+fastq_exract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
 """
 
 # status: testing
