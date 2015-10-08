@@ -17,7 +17,6 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 
 # status: development
 # * TODO:
-#     * parse barcodes
 #     * implement filter for barcodes containing N
 #     * implement merging
 #     * implement high pass filter
@@ -68,9 +67,11 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
 
-# load barcode library
+# load barcode library into dictionary
 input_handle = open(args.bclib, "rU")
 input_seq_iterator = SeqIO.parse(input_handle, "fasta")
-for record in input_seq_iterator:
-    logging.debug(record.id)
-    logging.debug(record.seq)
+barcode_dict = {record.id: record.seq for record in input_seq_iterator}
+if args.debug:
+    for bcid, bcseq in barcode_dict.items():
+        logging.debug("barcode id: " + bcid)
+        logging.debug("barcode seq: " + bcseq)
