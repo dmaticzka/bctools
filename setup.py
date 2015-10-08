@@ -18,5 +18,6 @@ setup(
         "scripttest",
         "argparse",
         "biopython",
+        "pandas>=0.16.2"
     ]
 )
