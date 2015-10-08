@@ -58,3 +58,4 @@ target/
 
 # User specified ignores
 testenv*
+.ipynb_checkpoints

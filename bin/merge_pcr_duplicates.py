@@ -18,17 +18,25 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 # status: development
 # * TODO:
 #     * implement filter for barcodes containing N
-#     * implement merging
 #     * implement high pass filter
+#     * add tests with maformed data and take care to give meaningful errors
 
 import argparse
 import logging
+from sys import stdout
 from Bio import SeqIO
+import pandas as pd
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
 from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
+
+
+def fasta_tuple_generator(fasta_iterator):
+    for record in input_seq_iterator:
+        yield (record.id, str(record.seq))
+
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description)
@@ -70,8 +78,31 @@ logging.info("")
 # load barcode library into dictionary
 input_handle = open(args.bclib, "rU")
 input_seq_iterator = SeqIO.parse(input_handle, "fasta")
-barcode_dict = {record.id: record.seq for record in input_seq_iterator}
-if args.debug:
-    for bcid, bcseq in barcode_dict.items():
-        logging.debug("barcode id: " + bcid)
-        logging.debug("barcode seq: " + bcseq)
+bcs = pd.DataFrame.from_records(
+    data=fasta_tuple_generator(input_seq_iterator),
+    columns=["read_id", "bc"])
+
+# load alignments
+alns = pd.read_csv(
+    args.infile,
+    sep="\t",
+    names=["chrom", "start", "stop", "read_id", "score", "strand"])
+
+# combine barcode library and alignments
+bcalib = pd.merge(
+    bcs, alns,
+    on="read_id",
+    how="inner",
+    sort=False)
+
+# count and merge pcr duplicates
+grouped = bcalib.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
+grouped.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
+
+# write coordinates of crosslinking event alignments
+eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
+grouped.to_csv(
+    eventalnout,
+    columns=['chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'],
+    sep="\t", index=False, header=False)
+eventalnout.close()
