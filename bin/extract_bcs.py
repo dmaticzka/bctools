@@ -58,9 +58,11 @@ parser.add_argument(
 
 args = parser.parse_args()
 if args.debug:
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
 elif args.verbose:
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
+else:
+    logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
 logging.info("Parsed arguments:")
 logging.info("  infile: '{}'".format(args.infile))
 logging.info("  pattern: '{}'".format(args.pattern))

@@ -1,0 +1,50 @@
+<tool id="merge_pcr_duplicates.py" name="merge_pcr_duplicates.py" version="1.0">
+  <description>
+Merge PCR duplicates according to random barcode library.
+
+Barcodes containing uncalled base 'N' are removed.
+By default output is written to stdout.
+
+Input:
+* bed6 file containing alignments with fastq read-id in name field
+* fasta library with fastq read-id as sequence ids
+
+Output:
+bed6 file with random barcode in name field and number of PCR duplicates as score
+
+Example usage:
+- read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
+merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
+</description>
+  <stdio>
+    <exit_code level="fatal" range="1:"/>
+  </stdio>
+  <version_command>python ../bin/merge_pcr_duplicates.py --version</version_command>
+  <command interpreter="python"><![CDATA[merge_pcr_duplicates.py 
+#if $positional_1 and $positional_1 is not None:
+$positional_1
+#end if
+
+#if $positional_2 and $positional_2 is not None:
+$positional_2
+#end if
+
+#if $outfile and $outfile is not None:
+--outfile $outfile
+#end if
+$verbose
+$debug
+> $default]]></command>
+  <inputs>
+    <param area="false" label="Path to bed6 file containing alignments." name="positional_1" type="text"/>
+    <param area="false" label="Path to fasta barcode library." name="positional_2" type="text"/>
+    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
+    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
+    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
+  </inputs>
+  <outputs>
+    <data format="txt" hidden="false" name="default"/>
+  </outputs>
+  <help><![CDATA[TODO: Write help]]></help>
+</tool>
+

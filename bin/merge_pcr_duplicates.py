@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 tool_description = """
-Merge PCR duplicates identified by random barcode. By default output is written to stdout.
+Merge PCR duplicates according to random barcode library.
+
+Barcodes containing uncalled base 'N' are removed.
+By default output is written to stdout.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
@@ -17,9 +20,11 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 
 # status: development
 # * TODO:
-#     * implement filter for barcodes containing N
-#     * implement high pass filter
+#     * check memory requirement; free memory for old DataFrames?
 #     * add tests with maformed data and take care to give meaningful errors
+#       * additional bed fields
+#       * not enough bed fields
+#       * malformed fasta
 
 import argparse
 import logging
@@ -34,6 +39,7 @@ signal(SIGPIPE, SIG_DFL)
 
 
 def fasta_tuple_generator(fasta_iterator):
+    "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
     for record in input_seq_iterator:
         yield (record.id, str(record.seq))
 
@@ -43,7 +49,7 @@ parser = argparse.ArgumentParser(description=tool_description)
 
 # positional arguments
 parser.add_argument(
-    "infile",
+    "alignments",
     help="Path to bed6 file containing alignments.")
 parser.add_argument(
     "bclib",
@@ -63,12 +69,15 @@ parser.add_argument(
     action="store_true")
 
 args = parser.parse_args()
+
 if args.debug:
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
 elif args.verbose:
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
+else:
+    logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
 logging.info("Parsed arguments:")
-logging.info("  infile: '{}'".format(args.infile))
+logging.info("  alignments: '{}'".format(args.alignments))
 logging.info("  bclib: '{}'".format(args.bclib))
 if args.outfile:
     logging.info("  outfile: enabled writing to file")
@@ -84,7 +93,7 @@ bcs = pd.DataFrame.from_records(
 
 # load alignments
 alns = pd.read_csv(
-    args.infile,
+    args.alignments,
     sep="\t",
     names=["chrom", "start", "stop", "read_id", "score", "strand"])
 
@@ -94,14 +103,33 @@ bcalib = pd.merge(
     on="read_id",
     how="inner",
     sort=False)
+if bcalib.empty:
+    raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
+n_alns = len(alns.index)
+n_bcalib = len(bcalib.index)
+if n_bcalib < n_alns:
+    logging.warning(
+        "{} of {} alignments could not be associated with a random barcode.".format(
+            n_alns - n_bcalib, n_alns))
+
+# remove entries with barcodes that has uncalled base N
+bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
+n_bcalib_cleaned = len(bcalib_cleaned)
+if n_bcalib_cleaned < n_bcalib:
+    msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
+        n_bcalib - n_bcalib_cleaned, n_bcalib)
+    if n_bcalib_cleaned < (0.8 * n_bcalib):
+        logging.warning(msg)
+    else:
+        logging.info(msg)
 
 # count and merge pcr duplicates
-grouped = bcalib.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
-grouped.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
+merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
+merged.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
 
 # write coordinates of crosslinking event alignments
 eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
-grouped.to_csv(
+merged.to_csv(
     eventalnout,
     columns=['chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'],
     sep="\t", index=False, header=False)
