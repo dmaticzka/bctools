@@ -20,6 +20,10 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 #     * implement filter for barcodes containing N
 #     * implement high pass filter
 #     * add tests with maformed data and take care to give meaningful errors
+#       * empty intersection of fastq and bed
+#       * issue warning if input bed entries are lost
+#       * additional bed fields
+#       * not enough bed fields
 
 import argparse
 import logging
@@ -94,6 +98,8 @@ bcalib = pd.merge(
     on="read_id",
     how="inner",
     sort=False)
+if bcalib.empty:
+    raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
 
 # count and merge pcr duplicates
 grouped = bcalib.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()

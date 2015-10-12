@@ -53,3 +53,18 @@ def test_call_stdout():
         testdir + outfile,
         datadir + "merged_pcr_dupes.bed"
     ))
+
+
+def test_call_no_readids_in_common():
+    "Call merge_pcr_duplicates.py with a library that includes none of the required ids."
+    infile = "pcr_dupes_sorted_2.bed"
+    inlib = "pcr_dupes_randomdict_no_common_ids.fa"
+    outfile = "should_not_be_crated.txt"
+    run = env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile,
+        expect_error=True
+    )
+    assert(run.returncode == 1)
