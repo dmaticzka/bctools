@@ -87,3 +87,20 @@ def test_call_barcodes_not_available_for_all_entries():
         datadir + "merged_pcr_dupes_incomplete.bed"
     ))
     assert(re.search("WARNING", run.stderr))
+
+
+def test_call_barcodes_withN():
+    "Call merge_pcr_duplicates.py with barcodes containing uncalled bases."
+    infile = "pcr_dupes_sorted_2.bed"
+    inlib = "pcr_dupes_randomdict_withN.fa"
+    outfile = "merged_pcr_dupes_withN.bed"
+    env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes_withN.bed"
+    ))

@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
 tool_description = """
-Merge PCR duplicates identified by random barcode. By default output is written to stdout.
+Merge PCR duplicates according to random barcode library and return coordinates of crosslinked nts.
+
+The crosslinked nt is assumed to be one nt upstream of the 5'-end of the alignment coordinates.
+By default output is written to stdout.
+Barcodes containing uncalled base 'N' are removed.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
@@ -17,7 +21,8 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 
 # status: development
 # * TODO:
-#     * implement filter for barcodes containing N
+#     * return crosslinking events, make full alignments optional
+#     * check memory requirement; free memory for old DataFrames?
 #     * implement high pass filter
 #     * add tests with maformed data and take care to give meaningful errors
 #       * additional bed fields
@@ -47,7 +52,7 @@ parser = argparse.ArgumentParser(description=tool_description)
 
 # positional arguments
 parser.add_argument(
-    "infile",
+    "alignments",
     help="Path to bed6 file containing alignments.")
 parser.add_argument(
     "bclib",
@@ -75,7 +80,7 @@ elif args.verbose:
 else:
     logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
 logging.info("Parsed arguments:")
-logging.info("  infile: '{}'".format(args.infile))
+logging.info("  alignments: '{}'".format(args.alignments))
 logging.info("  bclib: '{}'".format(args.bclib))
 if args.outfile:
     logging.info("  outfile: enabled writing to file")
@@ -91,7 +96,7 @@ bcs = pd.DataFrame.from_records(
 
 # load alignments
 alns = pd.read_csv(
-    args.infile,
+    args.alignments,
     sep="\t",
     names=["chrom", "start", "stop", "read_id", "score", "strand"])
 
@@ -103,15 +108,26 @@ bcalib = pd.merge(
     sort=False)
 if bcalib.empty:
     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
-n_alns = len(bcalib.index)
-n_bcalns = len(alns.index)
-if n_alns < n_bcalns:
+n_alns = len(alns.index)
+n_bcalib = len(bcalib.index)
+if n_bcalib < n_alns:
     logging.warning(
-        "{} of the {} alignments could not be associated with a random barcode.".format(
-            n_alns, n_bcalns))
+        "{} of {} alignments could not be associated with a random barcode.".format(
+            n_alns - n_bcalib, n_alns))
+
+# remove entries with barcodes that has uncalled base N
+bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
+n_bcalib_cleaned = len(bcalib_cleaned)
+if n_bcalib_cleaned < n_bcalib:
+    msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
+        n_bcalib - n_bcalib_cleaned, n_bcalib)
+    if n_bcalib_cleaned < (0.8 * n_bcalib):
+        logging.warning(msg)
+    else:
+        logging.info(msg)
 
 # count and merge pcr duplicates
-grouped = bcalib.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
+grouped = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
 grouped.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
 
 # write coordinates of crosslinking event alignments
