@@ -20,10 +20,9 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 #     * implement filter for barcodes containing N
 #     * implement high pass filter
 #     * add tests with maformed data and take care to give meaningful errors
-#       * empty intersection of fastq and bed
-#       * issue warning if input bed entries are lost
 #       * additional bed fields
 #       * not enough bed fields
+#       * malformed fasta
 
 import argparse
 import logging
@@ -38,6 +37,7 @@ signal(SIGPIPE, SIG_DFL)
 
 
 def fasta_tuple_generator(fasta_iterator):
+    "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
     for record in input_seq_iterator:
         yield (record.id, str(record.seq))
 
@@ -103,6 +103,12 @@ bcalib = pd.merge(
     sort=False)
 if bcalib.empty:
     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
+n_alns = len(bcalib.index)
+n_bcalns = len(alns.index)
+if n_alns < n_bcalns:
+    logging.warning(
+        "{} of the {} alignments could not be associated with a random barcode.".format(
+            n_alns, n_bcalns))
 
 # count and merge pcr duplicates
 grouped = bcalib.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()

@@ -68,3 +68,22 @@ def test_call_no_readids_in_common():
         expect_error=True
     )
     assert(run.returncode == 1)
+
+
+def test_call_barcodes_not_available_for_all_entries():
+    "Call merge_pcr_duplicates.py with infile and outfile."
+    infile = "pcr_dupes_sorted_2.bed"
+    inlib = "pcr_dupes_randomdict_missingsome.fa"
+    outfile = "merged_pcr_dupes_incomplete.bed"
+    run = env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile,
+        expect_stderr=True
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes_incomplete.bed"
+    ))
+    assert(re.search("WARNING", run.stderr))
