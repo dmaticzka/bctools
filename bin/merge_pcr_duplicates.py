@@ -24,6 +24,7 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 #     * return crosslinking events, make full alignments optional
 #     * check memory requirement; free memory for old DataFrames?
 #     * implement high pass filter
+#     * create galaxy xml stub
 #     * add tests with maformed data and take care to give meaningful errors
 #       * additional bed fields
 #       * not enough bed fields
@@ -63,6 +64,11 @@ parser.add_argument(
     help="Write results to this file.")
 # misc arguments
 parser.add_argument(
+    "-f", "--full-coords",
+    help="Return coordinates of full alignment instead of crosslinked nt.",
+    action="store_true"
+)
+parser.add_argument(
     "-v", "--verbose",
     help="Be verbose.",
     action="store_true")
@@ -82,6 +88,7 @@ else:
 logging.info("Parsed arguments:")
 logging.info("  alignments: '{}'".format(args.alignments))
 logging.info("  bclib: '{}'".format(args.bclib))
+logging.info("  full-coords: '{}'".format(args.full_coords))
 if args.outfile:
     logging.info("  outfile: enabled writing to file")
     logging.info("  outfile: '{}'".format(args.outfile))
@@ -127,12 +134,20 @@ if n_bcalib_cleaned < n_bcalib:
         logging.info(msg)
 
 # count and merge pcr duplicates
-grouped = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
-grouped.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
+merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
+merged.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
+
+if args.full_coords:
+    # keep full coordinates if requested
+    coords = merged
+else:
+    # otherwise calculate crosslinked nucleotides
+    # TODO
+    coords = merged
 
 # write coordinates of crosslinking event alignments
 eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
-grouped.to_csv(
+coords.to_csv(
     eventalnout,
     columns=['chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'],
     sep="\t", index=False, header=False)

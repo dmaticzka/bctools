@@ -29,7 +29,8 @@ def test_call_fileout():
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
-        "--outfile", outfile
+        "--outfile", outfile,
+        "--full-coords",
     )
     assert(cmp(
         testdir + outfile,
@@ -45,7 +46,8 @@ def test_call_stdout():
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
-        datadir_rel + inlib
+        datadir_rel + inlib,
+        "--full-coords",
     )
     with open(testdir + outfile, "w") as b:
         b.write(run.stdout)
@@ -65,6 +67,7 @@ def test_call_no_readids_in_common():
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
+        "--full-coords",
         expect_error=True
     )
     assert(run.returncode == 1)
@@ -80,6 +83,7 @@ def test_call_barcodes_not_available_for_all_entries():
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
+        "--full-coords",
         expect_stderr=True
     )
     assert(cmp(
@@ -98,9 +102,27 @@ def test_call_barcodes_withN():
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
-        "--outfile", outfile
+        "--outfile", outfile,
+        "--full-coords"
     )
     assert(cmp(
         testdir + outfile,
         datadir + "merged_pcr_dupes_withN.bed"
+    ))
+
+
+def test_call_clnts():
+    "Call merge_pcr_duplicates.py and return crosslinked nucleotides."
+    infile = "pcr_dupes_sorted_2.bed"
+    inlib = "pcr_dupes_randomdict.fa"
+    outfile = "merged_pcr_dupes_clnts.bed"
+    env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile,
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes_clnts.bed"
     ))
