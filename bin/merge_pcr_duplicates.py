@@ -21,7 +21,6 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 # status: development
 # * TODO:
 #     * check memory requirement; free memory for old DataFrames?
-#     * create galaxy xml stub
 #     * add tests with maformed data and take care to give meaningful errors
 #       * additional bed fields
 #       * not enough bed fields
