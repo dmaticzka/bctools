@@ -12,12 +12,15 @@ setup(
     long_description=open('README.md').read(),
     scripts=[
         "bin/extract_bcs.py",
-        "bin/convert_bc_to_binary_RY.py"
+        "bin/convert_bc_to_binary_RY.py",
+        "bin/coords2clnt.py",
+        "bin/merge_pcr_duplicates.py",
     ],
     install_requires=[
         "scripttest",
         "argparse",
         "biopython",
-        "pandas>=0.16.2"
+        "pandas>=0.16.2",
+        "pybedtools>=0.6.9",
     ]
 )
