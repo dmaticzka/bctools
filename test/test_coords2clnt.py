@@ -31,12 +31,12 @@ def test_call_fileout():
     )
     assert(cmp(
         testdir + outfile,
-        datadir + "converted_bcs.fa"
+        datadir + "merged_pcr_dupes_clnts.bed"
     ))
 
 
 def test_call_stdout():
-    "Call coords2clnt.py with infile."
+    "Call coords2clnt.py with infile, write to stdout."
     infile = "merged_pcr_dupes.bed"
     outfile = "stdout_only_positional_args.bed"
     run = env.run(

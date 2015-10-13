@@ -7,8 +7,8 @@ Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
 By default output is written to stdout.
 
 Input:
-* bed6 file of the aligned reads
-*
+* bed6 file containing coordinates of aligned reads
+* bed6 file containing coordinates of crosslinking events
 
 Example usage:
 - convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
@@ -20,12 +20,9 @@ Status:
 
 import argparse
 import logging
-from string import maketrans
 from sys import stdout
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
-
+from pybedtools import BedTool
+from pybedtools.featurefuncs import five_prime
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
 from signal import signal, SIGPIPE, SIG_DFL
@@ -37,7 +34,7 @@ parser = argparse.ArgumentParser(description=tool_description)
 # positional arguments
 parser.add_argument(
     "infile",
-    help="Path to fasta input file.")
+    help="Path to bed input file.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
@@ -50,26 +47,6 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
-
-
-def translate_nt_to_RY(seq):
-    """Translates nucleotides to RY (A,G -> R; C,U,T -> Y).
-
-    >>> translate_nt_to_RY("ACGUTACGUT")
-    RYRYYRYRYY
-    """
-    trans_table = maketrans("AGCUT", "RRYYY")
-    trans_seq = seq.translate(trans_table)
-    logging.debug(seq + " -> " + trans_seq)
-    return trans_seq
-
-
-def translate_nt_to_RY_iterator(robj):
-    """Translate SeqRecords sequences to RY alphabet."""
-    for record in robj:
-        record.seq = Seq(translate_nt_to_RY(str(record.seq)),
-                         IUPAC.unambiguous_dna)
-        yield record
 
 # handle arguments
 args = parser.parse_args()
@@ -85,3 +62,18 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
+
+# data processing
+alns = BedTool(args.infile)
+clnts = alns.each(five_prime, upstream=1, downstream=0)
+
+# write to file or to stdout
+if args.outfile:
+    clnts.saveas(args.outfile)
+else:
+    tmptool = clnts.saveas()
+    logging.debug("results written to temporary file :" + tmptool.fn)
+    tmp = open(tmptool.fn)
+    for line in tmp:
+        stdout.write(line)
+    tmp.close()
