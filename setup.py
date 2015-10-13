@@ -15,6 +15,7 @@ setup(
         "bin/convert_bc_to_binary_RY.py",
         "bin/coords2clnt.py",
         "bin/merge_pcr_duplicates.py",
+        "bin/rm_spurious_events.py"
     ],
     install_requires=[
         "scripttest",
