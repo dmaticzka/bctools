@@ -22,7 +22,6 @@ rm_spurious_events.py spurious.bed --out cleaned.bed
 
 # status: development
 # * TODO:
-#     * handle unsorted input
 #     * check memory requirement; free memory for old DataFrames?
 #     * add tests with maformed data and take care to give meaningful errors
 #       * additional bed fields
