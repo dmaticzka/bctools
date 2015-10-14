@@ -13,7 +13,7 @@ Input:
 * bed6 file containing crosslinking events with score field set to number of PCR duplicates
 
 Output:
-* bed6 file with spurious crosslinking events removed
+* bed6 file with spurious crosslinking events removed, sorted by fields chrom, start, stop, strand
 
 Example usage:
 - remove spurious events from spurious.bed and write results to file cleaned.bed:
@@ -93,7 +93,7 @@ alns = pd.read_csv(
 
 # remove all alignments that not enough PCR duplicates with respect to
 # the group maximum
-grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'])
+grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
 alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
 
 # write coordinates of crosslinking event alignments
