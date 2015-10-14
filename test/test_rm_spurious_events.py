@@ -65,3 +65,18 @@ def test_call_fileout_threshold_50p():
         testdir + outfile,
         datadir + "merged_pcr_dupes_spurious_filtered_thresh05.bed"
     ))
+
+
+def test_call_not_sorted():
+    "Call rm_spurious_events.py with bed entries that are not sored and outfile."
+    infile = "merged_pcr_dupes_spurious_notsorted.bed"
+    outfile = "merged_pcr_dupes_spurious_filtered2.bed"
+    env.run(
+        bindir_rel + "rm_spurious_events.py",
+        datadir_rel + infile,
+        "--outfile", outfile
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes_spurious_filtered2.bed"
+    ))
