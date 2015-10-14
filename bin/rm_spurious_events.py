@@ -22,6 +22,7 @@ rm_spurious_events.py spurious.bed --out cleaned.bed
 
 # status: development
 # * TODO:
+#     * handle unsorted input
 #     * check memory requirement; free memory for old DataFrames?
 #     * add tests with maformed data and take care to give meaningful errors
 #       * additional bed fields
@@ -90,14 +91,15 @@ alns = pd.read_csv(
     sep="\t",
     names=["chrom", "start", "stop", "read_id", "score", "strand"])
 
-# # count and merge pcr duplicates
-# merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
-# merged.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
+# remove all alignments that not enough PCR duplicates with respect to
+# the group maximum
+grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'])
+alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
 
-# # write coordinates of crosslinking event alignments
-# eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
-# merged.to_csv(
-#     eventalnout,
-#     columns=['chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'],
-#     sep="\t", index=False, header=False)
-# eventalnout.close()
+# write coordinates of crosslinking event alignments
+alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
+alns_cleaned.to_csv(
+    alns_cleaned_out,
+    columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
+    sep="\t", index=False, header=False)
+alns_cleaned_out.close()

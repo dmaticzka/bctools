@@ -37,7 +37,7 @@ def test_call_fileout():
 
 def test_call_stdout():
     "Call rm_spurious_events.py with infile, write to stdout."
-    infile = "merged_pcr_dupes.bed"
+    infile = "merged_pcr_dupes_spurious.bed"
     outfile = "stdout_only_positional_args.bed"
     run = env.run(
         bindir_rel + "rm_spurious_events.py",
@@ -54,7 +54,7 @@ def test_call_stdout():
 def test_call_fileout_threshold_50p():
     "Call rm_spurious_events.py with infile and outfile, setting threshold for detection of spurious events to 50%."
     infile = "merged_pcr_dupes_spurious.bed"
-    outfile = "merged_pcr_dupes_spurious_filtered.bed"
+    outfile = "merged_pcr_dupes_spurious_filtered_thresh05.bed"
     env.run(
         bindir_rel + "rm_spurious_events.py",
         datadir_rel + infile,
