@@ -11,7 +11,7 @@ Input:
 * fasta library with fastq read-id as sequence ids
 
 Output:
-bed6 file with random barcode in name field and number of PCR duplicates as score
+* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
 
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
@@ -124,7 +124,8 @@ if n_bcalib_cleaned < n_bcalib:
         logging.info(msg)
 
 # count and merge pcr duplicates
-merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'bc', 'strand']).size().reset_index()
+# grouping sorts by keys, so the ouput will be properly sorted
+merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'strand', 'bc']).size().reset_index()
 merged.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
 
 # write coordinates of crosslinking event alignments
