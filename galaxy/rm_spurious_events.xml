@@ -1,0 +1,52 @@
+<tool id="rm_spurious_events.py" name="rm_spurious_events.py" version="1.0">
+  <description>
+Remove spurious events originating from errors in random sequence tags.
+
+This script compares all events sharing the same coordinates.
+Among each group of events the maximum number of PCR duplicates is determined.
+All events that are supported by less than 10 percent of this maximum count are removed.
+
+By default output is written to stdout.
+
+Input:
+* bed6 file containing crosslinking events with score field set to number of PCR duplicates
+
+Output:
+* bed6 file with spurious crosslinking events removed, sorted by fields chrom, start, stop, strand
+
+Example usage:
+- remove spurious events from spurious.bed and write results to file cleaned.bed:
+rm_spurious_events.py spurious.bed --out cleaned.bed
+</description>
+  <stdio>
+    <exit_code level="fatal" range="1:"/>
+  </stdio>
+  <version_command>python bin/rm_spurious_events.py --version</version_command>
+  <command interpreter="python"><![CDATA[rm_spurious_events.py 
+#if $positional_1 and $positional_1 is not None:
+$positional_1
+#end if
+
+#if $outfile and $outfile is not None:
+--outfile $outfile
+#end if
+
+#if $threshold and $threshold is not None:
+--threshold $threshold
+#end if
+$verbose
+$debug
+> $default]]></command>
+  <inputs>
+    <param area="false" label="Path to bed6 file containing alignments." name="positional_1" type="text"/>
+    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
+    <param help="(--threshold)" label="Threshold for spurious event removal." name="threshold" optional="true" type="float" value="0.1"/>
+    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
+    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
+  </inputs>
+  <outputs>
+    <data format="txt" hidden="false" name="default"/>
+  </outputs>
+  <help><![CDATA[TODO: Write help]]></help>
+</tool>
+
