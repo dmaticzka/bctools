@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 tool_description = """
-Convert fasta nucleotides to IUPAC nucleotide codes for binary barcodes.
+Convert standard nucleotides to IUPAC nucleotide codes used for binary barcodes.
 
-A and G are converted to nucleotide code R. T, U and C are converted to Y. By default output is written to stdout.
+A and G are converted to nucleotide code R. T, U and C are converted to Y. By
+default output is written to stdout.
 
 Example usage:
 - write converted sequences from file in.fa to file file out.fa:

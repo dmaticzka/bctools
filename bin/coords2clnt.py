@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 tool_description = """
-Given coordinates of the aligned reads, calculate positions of the crosslinked nucleotides.
-Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
+Given coordinates of the aligned reads, calculate positions of the crosslinked
+nucleotides. Crosslinked nts are assumed to be one nt upstream of the 5'-end of
+the read.
 
 By default output is written to stdout.
 
@@ -11,7 +12,8 @@ Input:
 * bed6 file containing coordinates of crosslinking events
 
 Example usage:
-- convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
+- convert read coordinates from file in.bed to coordinates of the crosslinking
+  events, written to out.bed:
 coords2clnt.py in.bed --outfile out.bed
 """
 

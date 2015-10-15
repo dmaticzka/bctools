@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 tool_description = """
-Remove a certain number of nucleotides from the 3'-tails of sequences in fastq format.
+Remove a certain number of nucleotides from the 3'-tails of sequences in fastq
+format.
 
 Example usage:
-- remove the last 7 nucleotides from file input.fastq, write result to file output.fastq:
+- remove the last 7 nucleotides from file input.fastq, write result to file
+  output.fastq:
 remove_tail.py input.fastq 7 --out output.fastq
 """
 

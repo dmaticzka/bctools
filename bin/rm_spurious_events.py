@@ -3,20 +3,22 @@
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
 
-This script compares all events sharing the same coordinates.
-Among each group of events the maximum number of PCR duplicates is determined.
-All events that are supported by less than 10 percent of this maximum count are removed.
+This script compares all events sharing the same coordinates. Among each group
+of events the maximum number of PCR duplicates is determined. All events that
+are supported by less than 10 percent of this maximum count are removed.
 
 By default output is written to stdout.
 
 Input:
-* bed6 file containing crosslinking events with score field set to number of PCR duplicates
+* bed6 file containing crosslinking events with score field set to number of PCR
+  duplicates
 
 Output:
-* bed6 file with spurious crosslinking events removed, sorted by fields chrom, start, stop, strand
+* bed6 file with spurious crosslinking events removed, sorted by fields chrom,
+  start, stop, strand
 
 Example usage:
-- remove spurious events from spurious.bed and write results to file cleaned.bed:
+- remove spurious events from spurious.bed and write results to file cleaned.bed
 rm_spurious_events.py spurious.bed --out cleaned.bed
 """
 
@@ -33,6 +35,12 @@ import logging
 from sys import stdout
 import pandas as pd
 
+
+class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,
+                                          argparse.RawDescriptionHelpFormatter):
+    # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
+    pass
+
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
 from signal import signal, SIGPIPE, SIG_DFL
@@ -41,7 +49,7 @@ signal(SIGPIPE, SIG_DFL)
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
                                  epilog=epilog,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+                                 formatter_class=DefaultsRawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "events",

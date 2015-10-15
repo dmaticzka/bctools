@@ -3,18 +3,20 @@
 tool_description = """
 Merge PCR duplicates according to random barcode library.
 
-Barcodes containing uncalled base 'N' are removed.
-By default output is written to stdout.
+Barcodes containing uncalled base 'N' are removed. By default output is written
+to stdout.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
 * fasta library with fastq read-id as sequence ids
 
 Output:
-* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
+* bed6 file with random barcode in name field and number of PCR duplicates as
+  score, sorted by fields chrom, start, stop, strand, name
 
 Example usage:
-- read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
+- read PCR duplicates from file duplicates.bed and write merged results to file
+  merged.bed:
 merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 """
 
