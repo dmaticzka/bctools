@@ -1,0 +1,42 @@
+<tool id="remove_tail.py" name="remove_tail.py" version="1.0">
+  <description>
+Remove a certain number of nucleotides from the 3'-tails of sequences in fastq format.
+
+Example usage:
+- remove the last 7 nucleotides from file input.fastq, write result to file output.fastq:
+remove_tail.py input.fastq 7 --out output.fastq
+
+Status: development
+</description>
+  <stdio>
+    <exit_code level="fatal" range="1:"/>
+  </stdio>
+  <version_command>python ../bin/remove_tail.py --version</version_command>
+  <command interpreter="python"><![CDATA[remove_tail.py 
+#if $positional_1 and $positional_1 is not None:
+$positional_1
+#end if
+
+#if $positional_2 and $positional_2 is not None:
+$positional_2
+#end if
+
+#if $outfile and $outfile is not None:
+--outfile $outfile
+#end if
+$verbose
+$debug
+> $default]]></command>
+  <inputs>
+    <param area="false" label="Path to fastq file." name="positional_1" type="text"/>
+    <param label="Remove this many nts." name="positional_2" type="integer" value="0"/>
+    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
+    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
+    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
+  </inputs>
+  <outputs>
+    <data format="txt" hidden="false" name="default"/>
+  </outputs>
+  <help><![CDATA[TODO: Write help]]></help>
+</tool>
+
