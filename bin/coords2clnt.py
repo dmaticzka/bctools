@@ -13,7 +13,13 @@ Input:
 Example usage:
 - convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
 coords2clnt.py in.bed --outfile out.bed
+"""
 
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
 
@@ -28,8 +34,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "infile",
@@ -46,6 +53,11 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
+
 
 # handle arguments
 args = parser.parse_args()

@@ -2,14 +2,19 @@
 
 tool_description = """
 Convert fasta nucleotides to IUPAC nucleotide codes for binary barcodes.
-By default output is written to stdout.
 
-A and G are converted to nucleotide code R. T, U and C are converted to Y.
+A and G are converted to nucleotide code R. T, U and C are converted to Y. By default output is written to stdout.
 
 Example usage:
 - write converted sequences from file in.fa to file file out.fa:
 convert_bc_to_binary_RY.py in.fa --outfile out.fa
+"""
 
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
 
@@ -27,8 +32,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "infile",
@@ -45,6 +51,10 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
 
 
 def translate_nt_to_RY(seq):

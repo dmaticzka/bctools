@@ -5,13 +5,11 @@ Remove a certain number of nucleotides from the 3'-tails of sequences in fastq f
 Example usage:
 - remove the last 7 nucleotides from file input.fastq, write result to file output.fastq:
 remove_tail.py input.fastq 7 --out output.fastq
-
-Status: development
 </description>
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python bin/remove_tail.py --version</version_command>
+  <version_command>python remove_tail.py --version</version_command>
   <command interpreter="python"><![CDATA[remove_tail.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
@@ -37,6 +35,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
-  <help><![CDATA[TODO: Write help]]></help>
+  <help><![CDATA[
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+]]></help>
 </tool>
 

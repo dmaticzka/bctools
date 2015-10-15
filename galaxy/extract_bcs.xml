@@ -10,7 +10,7 @@ fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python bin/extract_bcs.py --version</version_command>
+  <version_command>python extract_bcs.py --version</version_command>
   <command interpreter="python"><![CDATA[extract_bcs.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
@@ -41,6 +41,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
-  <help><![CDATA[TODO: Write help]]></help>
+  <help><![CDATA[
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+]]></help>
 </tool>
 

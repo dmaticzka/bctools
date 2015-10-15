@@ -16,7 +16,13 @@ Output:
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
 merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
+"""
 
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
 
@@ -39,8 +45,9 @@ def fasta_tuple_generator(fasta_iterator):
 
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "alignments",
@@ -61,6 +68,10 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
 
 args = parser.parse_args()
 
