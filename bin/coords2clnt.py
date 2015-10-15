@@ -14,8 +14,7 @@ Example usage:
 - convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
 coords2clnt.py in.bed --outfile out.bed
 
-Status:
-- development
+Status: Testing
 """
 
 import argparse

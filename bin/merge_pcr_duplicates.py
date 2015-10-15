@@ -16,15 +16,9 @@ Output:
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
 merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
-"""
 
-# status: development
-# * TODO:
-#     * check memory requirement; free memory for old DataFrames?
-#     * add tests with maformed data and take care to give meaningful errors
-#       * additional bed fields
-#       * not enough bed fields
-#       * malformed fasta
+Status: Testing
+"""
 
 import argparse
 import logging

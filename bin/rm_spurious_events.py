@@ -18,14 +18,9 @@ Output:
 Example usage:
 - remove spurious events from spurious.bed and write results to file cleaned.bed:
 rm_spurious_events.py spurious.bed --out cleaned.bed
-"""
 
-# status: development
-# * TODO:
-#     * check memory requirement; free memory for old DataFrames?
-#     * add tests with maformed data and take care to give meaningful errors
-#       * additional bed fields
-#       * not enough bed fields
+Status: Testing
+"""
 
 import argparse
 import logging

@@ -7,7 +7,7 @@ Example usage:
 - remove the last 7 nucleotides from file input.fastq, write result to file output.fastq:
 remove_tail.py input.fastq 7 --out output.fastq
 
-Status: development
+Status: Testing
 """
 
 import argparse

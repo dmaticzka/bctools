@@ -10,8 +10,7 @@ Example usage:
 - write converted sequences from file in.fa to file file out.fa:
 convert_bc_to_binary_RY.py in.fa --outfile out.fa
 
-Status:
-- development
+Status: Testing
 """
 
 import argparse
