@@ -11,7 +11,7 @@ Status: development
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python ../bin/remove_tail.py --version</version_command>
+  <version_command>python bin/remove_tail.py --version</version_command>
   <command interpreter="python"><![CDATA[remove_tail.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1

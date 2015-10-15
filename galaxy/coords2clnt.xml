@@ -19,7 +19,7 @@ Status:
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python ../bin/coords2clnt.py --version</version_command>
+  <version_command>python bin/coords2clnt.py --version</version_command>
   <command interpreter="python"><![CDATA[coords2clnt.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1

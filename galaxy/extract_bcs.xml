@@ -5,12 +5,12 @@ By default output is written to stdout.
 
 Example usage:
 - move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file output.fastq:
-fastq_exract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
+fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
 </description>
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python ../bin/extract_bcs.py --version</version_command>
+  <version_command>python bin/extract_bcs.py --version</version_command>
   <command interpreter="python"><![CDATA[extract_bcs.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1

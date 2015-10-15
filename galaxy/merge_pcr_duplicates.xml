@@ -10,7 +10,7 @@ Input:
 * fasta library with fastq read-id as sequence ids
 
 Output:
-bed6 file with random barcode in name field and number of PCR duplicates as score
+* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
 
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
@@ -19,7 +19,7 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python ../bin/merge_pcr_duplicates.py --version</version_command>
+  <version_command>python bin/merge_pcr_duplicates.py --version</version_command>
   <command interpreter="python"><![CDATA[merge_pcr_duplicates.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
