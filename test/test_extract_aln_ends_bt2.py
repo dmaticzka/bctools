@@ -22,7 +22,7 @@ def test_call_without_parameters():
 
 def test_call_fileout():
     "Call extract_aln_ends_bt2.py with infile and outfile."
-    infile = "tworeads.sam"
+    infile = "twomates.sam"
     outfile = "tworeads_aln_ends.bed"
     env.run(
         bindir_rel + "extract_aln_ends_bt2.py",
@@ -37,7 +37,7 @@ def test_call_fileout():
 
 def test_call_stdout():
     "Call extract_aln_ends_bt2.py with infile, write to stdout."
-    infile = "tworeads.sam"
+    infile = "twomates.sam"
     outfile = "tworeads_aln_ends_stdout.bed"
     run = env.run(
         bindir_rel + "extract_aln_ends_bt2.py",
