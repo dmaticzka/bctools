@@ -32,6 +32,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
+  <tests>
+    <test>
+      <param name="positional_1" value="test/data/result.fa"/>
+      <output name="default" value="test/data/converted_bcs.fa"/>
+    </test>
+  </tests>
   <help><![CDATA[
 Author: Daniel Maticzka
 Copyright: 2015
