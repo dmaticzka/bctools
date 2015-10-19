@@ -25,7 +25,5 @@ install:
   # packages specified by setup.py
   - pip install .
 script:
-  - which python
-  - which nosetests
   - flake8 . --exclude=.venv --ignore=E501
   - nosetests
