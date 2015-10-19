@@ -28,5 +28,4 @@ script:
   - which python
   - which nosetests
   - flake8 . --exclude=.venv --ignore=E501
-  - python `which nosetests`
   - nosetests
