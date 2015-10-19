@@ -19,7 +19,7 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python bin/merge_pcr_duplicates.py --version</version_command>
+  <version_command>python merge_pcr_duplicates.py --version</version_command>
   <command interpreter="python"><![CDATA[merge_pcr_duplicates.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
@@ -45,6 +45,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
-  <help><![CDATA[TODO: Write help]]></help>
+  <help><![CDATA[
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+]]></help>
 </tool>
 

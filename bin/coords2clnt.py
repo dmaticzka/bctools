@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 tool_description = """
-Given coordinates of the aligned reads, calculate positions of the crosslinked nucleotides.
-Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
+Given coordinates of the aligned reads, calculate positions of the crosslinked
+nucleotides. Crosslinked nts are assumed to be one nt upstream of the 5'-end of
+the read.
 
 By default output is written to stdout.
 
@@ -11,11 +12,17 @@ Input:
 * bed6 file containing coordinates of crosslinking events
 
 Example usage:
-- convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
+- convert read coordinates from file in.bed to coordinates of the crosslinking
+  events, written to out.bed:
 coords2clnt.py in.bed --outfile out.bed
+"""
 
-Status:
-- development
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
 """
 
 import argparse
@@ -29,8 +36,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "infile",
@@ -47,6 +55,11 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
+
 
 # handle arguments
 args = parser.parse_args()

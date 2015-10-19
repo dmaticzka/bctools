@@ -1,21 +1,17 @@
-<tool id="convert_bc_to_binary_RY.py" name="convert_bc_to_binary_RY.py" version="1.0">
+<tool id="convert_bc_to_binary_RY.py" name="convert_bc_to_binary_RY.py" version="0.1.0">
   <description>
 Convert fasta nucleotides to IUPAC nucleotide codes for binary barcodes.
-By default output is written to stdout.
 
-A and G are converted to nucleotide code R. T, U and C are converted to Y.
+A and G are converted to nucleotide code R. T, U and C are converted to Y. By default output is written to stdout.
 
 Example usage:
 - write converted sequences from file in.fa to file file out.fa:
 convert_bc_to_binary_RY.py in.fa --outfile out.fa
-
-Status:
-- development
 </description>
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python bin/convert_bc_to_binary_RY.py --version</version_command>
+  <version_command>python convert_bc_to_binary_RY.py --version</version_command>
   <command interpreter="python"><![CDATA[convert_bc_to_binary_RY.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
@@ -36,6 +32,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
-  <help><![CDATA[TODO: Write help]]></help>
+  <help><![CDATA[
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+]]></help>
 </tool>
 

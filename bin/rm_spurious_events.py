@@ -3,34 +3,43 @@
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
 
-This script compares all events sharing the same coordinates.
-Among each group of events the maximum number of PCR duplicates is determined.
-All events that are supported by less than 10 percent of this maximum count are removed.
+This script compares all events sharing the same coordinates. Among each group
+of events the maximum number of PCR duplicates is determined. All events that
+are supported by less than 10 percent of this maximum count are removed.
 
 By default output is written to stdout.
 
 Input:
-* bed6 file containing crosslinking events with score field set to number of PCR duplicates
+* bed6 file containing crosslinking events with score field set to number of PCR
+  duplicates
 
 Output:
-* bed6 file with spurious crosslinking events removed, sorted by fields chrom, start, stop, strand
+* bed6 file with spurious crosslinking events removed, sorted by fields chrom,
+  start, stop, strand
 
 Example usage:
-- remove spurious events from spurious.bed and write results to file cleaned.bed:
+- remove spurious events from spurious.bed and write results to file cleaned.bed
 rm_spurious_events.py spurious.bed --out cleaned.bed
 """
 
-# status: development
-# * TODO:
-#     * check memory requirement; free memory for old DataFrames?
-#     * add tests with maformed data and take care to give meaningful errors
-#       * additional bed fields
-#       * not enough bed fields
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+"""
 
 import argparse
 import logging
 from sys import stdout
 import pandas as pd
+
+
+class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,
+                                          argparse.RawDescriptionHelpFormatter):
+    # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
+    pass
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
@@ -38,8 +47,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=DefaultsRawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "events",
@@ -63,6 +73,10 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
 
 args = parser.parse_args()
 

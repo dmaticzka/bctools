@@ -12,10 +12,11 @@ setup(
     long_description=open('README.md').read(),
     scripts=[
         "bin/extract_bcs.py",
+        "bin/extract_aln_ends_bt2.py",
         "bin/convert_bc_to_binary_RY.py",
         "bin/coords2clnt.py",
         "bin/merge_pcr_duplicates.py",
-        "bin/remove_tail.py"
+        "bin/remove_tail.py",
         "bin/rm_spurious_events.py",
     ],
     install_requires=[

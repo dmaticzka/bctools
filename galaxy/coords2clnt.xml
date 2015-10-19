@@ -12,14 +12,11 @@ Input:
 Example usage:
 - convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
 coords2clnt.py in.bed --outfile out.bed
-
-Status:
-- development
 </description>
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
-  <version_command>python bin/coords2clnt.py --version</version_command>
+  <version_command>python coords2clnt.py --version</version_command>
   <command interpreter="python"><![CDATA[coords2clnt.py 
 #if $positional_1 and $positional_1 is not None:
 $positional_1
@@ -40,6 +37,12 @@ $debug
   <outputs>
     <data format="txt" hidden="false" name="default"/>
   </outputs>
-  <help><![CDATA[TODO: Write help]]></help>
+  <help><![CDATA[
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+]]></help>
 </tool>
 

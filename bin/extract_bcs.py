@@ -2,21 +2,22 @@
 
 tool_description = """
 Exract barcodes from a FASTQ file according to a user-specified pattern.
+
 By default output is written to stdout.
 
 Example usage:
-- move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file output.fastq:
+- move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file
+  output.fastq:
 fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
 """
 
-# status: testing
-# * proposed features:
-#     * transparently read fastq.gz files?
-#     * option to write fastq.gz files?
-#     * annotate extracted sequence in header?
-#     * option not to write to the header?
-#     * ability to read fastq from stdin?
-#     * option to skip barcoded reads containing unspecified N nuclotide in barcode?
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+"""
 
 import argparse
 import logging
@@ -30,8 +31,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "infile",
@@ -55,6 +57,10 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
 
 args = parser.parse_args()
 if args.debug:

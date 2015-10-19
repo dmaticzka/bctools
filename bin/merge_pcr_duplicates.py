@@ -3,28 +3,30 @@
 tool_description = """
 Merge PCR duplicates according to random barcode library.
 
-Barcodes containing uncalled base 'N' are removed.
-By default output is written to stdout.
+Barcodes containing uncalled base 'N' are removed. By default output is written
+to stdout.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
 * fasta library with fastq read-id as sequence ids
 
 Output:
-* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
+* bed6 file with random barcode in name field and number of PCR duplicates as
+  score, sorted by fields chrom, start, stop, strand, name
 
 Example usage:
-- read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
+- read PCR duplicates from file duplicates.bed and write merged results to file
+  merged.bed:
 merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 """
 
-# status: development
-# * TODO:
-#     * check memory requirement; free memory for old DataFrames?
-#     * add tests with maformed data and take care to give meaningful errors
-#       * additional bed fields
-#       * not enough bed fields
-#       * malformed fasta
+epilog = """
+Author: Daniel Maticzka
+Copyright: 2015
+License: Apache
+Email: maticzkd@informatik.uni-freiburg.de
+Status: Testing
+"""
 
 import argparse
 import logging
@@ -45,8 +47,9 @@ def fasta_tuple_generator(fasta_iterator):
 
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description)
-
+parser = argparse.ArgumentParser(description=tool_description,
+                                 epilog=epilog,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
     "alignments",
@@ -67,6 +70,10 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
+parser.add_argument(
+    '--version',
+    action='version',
+    version='0.1.0')
 
 args = parser.parse_args()
 
