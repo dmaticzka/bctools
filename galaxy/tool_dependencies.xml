@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="flexbar" version="2.4">
+        <install version="1.0">
+            <actions_group>
+                <actions os="linux" architecture="x86_64">
+                    <action type="download_by_url" target_filename="flexbar_v2.4_linux64.tgz">http://sourceforge.net/projects/flexbar/files/2.4/flexbar_v2.4_linux64.tgz</action>
+                    <action type="move_directory_files">
+                        <source_directory>.</source_directory>
+                        <destination_directory>$INSTALL_DIR</destination_directory>
+                    </action>
+                </actions>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/</environment_variable>
+                    <environment_variable name="LD_LIBRARY_PATH" action="prepend_to">$INSTALL_DIR/</environment_variable>
+                </action>
+            </actions_group>
+        </install>
+        <readme>
+Program: flexbar - flexible barcode and adapter removal
+Version: 2.4
+
+SYNOPSIS
+    flexbar -r reads [-t target] [-b barcodes] [-a adapters] [options]
+
+DESCRIPTION
+    -h, --help
+          Displays this help message.
+    -w, --advanced
+          Print advanced options help screen.
+    -i, --cite
+          Show program reference for citation.
+
+  Basic options:
+    -n, --threads NUM
+          Number of threads to employ. Default: 1.
+    -t, --target STR
+          Prefix for output file names or paths. Default: flexbar.
+    -r, --reads FILE
+          Fasta/q file or stdin (-) with reads that may contain barcodes.
+    -p, --reads2 FILE
+          Second input file of paired reads, gz and bz2 files supported.
+    -f, --format STR
+          Quality format: sanger, solexa, i1.3, i1.5, i1.8 (illumina 1.8+).
+    -c, --color-space
+          Input in color-space format csfasta or csfastq in sanger scaling.
+
+  Barcode detection:
+    -b, --barcodes FILE
+          Fasta file with barcodes for demultiplexing that may contain N.
+    -br, --barcode-reads FILE
+          Fasta/q file composed of separate barcode reads for detection.
+    -be, --barcode-trim-end STR
+          Type of detection, see section trim-end modes. Default: ANY.
+    -bo, --barcode-min-overlap NUM
+          Minimum overlap of barcode and read. Default: barcode length.
+    -bt, --barcode-threshold NUM
+          Allowed mismatches and gaps per 10 bases overlap. Default: 1.0.
+    -bu, --barcode-unassigned
+          Include unassigned reads in output generation.
+
+  Adapter removal:
+    -a, --adapters FILE
+          Fasta file with adapters for removal that may contain N.
+    -as, --adapter-seq STR
+          Single adapter sequence as alternative to adapters option.
+    -ae, --adapter-trim-end STR
+          Type of removal, see section trim-end modes. Default: RIGHT.
+    -ao, --adapter-min-overlap NUM
+          Minimum overlap of adapter and read sequence. Default: 1.
+    -at, --adapter-threshold NUM
+          Allowed mismatches and gaps per 10 bases overlap. Default: 3.0.
+
+  Filtering and trimming:
+    -u, --max-uncalled NUM
+          Allowed uncalled bases (N or .) for each read. Default: 0.
+    -x, --pre-trim-left NUM
+          Trim given number of bases on 5' read end before detection.
+    -y, --pre-trim-right NUM
+          Trim specified number of bases on 3' end prior to detection.
+    -q, --pre-trim-phred NUM
+          Trim 3' end until specified or higher quality reached.
+    -k, --post-trim-length NUM
+          Trim to specified read length from 3' end after removal.
+    -m, --min-read-length NUM
+          Minimum read length to remain after removal. Default: 18.
+
+  Output selection:
+    -o, --fasta-output
+          Prefer non-quality formats fasta and csfasta for output.
+    -z, --zip-output STR
+          Enable direct compression of output files. One of GZ and BZ2.
+    -s, --single-reads
+          Write single paired reads for too short counterparts.
+
+  Logging and tagging:
+    -l, --log-level STR
+          Print valid optimal read alignment. One of ALL, MOD, and TAB.
+    -g, --removal-tags
+          Tag reads that are subject to adapter or barcode removal.
+
+  Trim-end modes:
+    ANY: longer side of read remains after removal of overlap
+    LEFT: right side remains after removal, align &lt;= read end
+    RIGHT: left part remains after removal, align &gt;= read start
+    LEFT_TAIL: consider first n bases of reads in alignment
+    RIGHT_TAIL: use only last n bases, see tail-length options
+
+EXAMPLES
+    flexbar -r reads.fq -f i1.8 -t target -b brc.fa -a adap.fa
+    flexbar -r reads.csfastq.gz -a adap.fa -ao 5 -ae LEFT -c
+
+VERSION
+    flexbar version: 2.4
+    Last update July 29, 2013
+
+Advanced options: flexbar -w
+        </readme>
+    </package>
+</tool_dependency>
