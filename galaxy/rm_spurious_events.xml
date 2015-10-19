@@ -22,7 +22,7 @@ rm_spurious_events.py spurious.bed --out cleaned.bed
     <exit_code level="fatal" range="1:"/>
   </stdio>
   <version_command>python rm_spurious_events.py --version</version_command>
-  <command interpreter="python"><![CDATA[rm_spurious_events.py 
+  <command interpreter="python"><![CDATA[rm_spurious_events.py
 #if $positional_1 and $positional_1 is not None:
 $positional_1
 #end if
@@ -54,5 +54,7 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
+  <citations>
+      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
+  </citations>
 </tool>
-

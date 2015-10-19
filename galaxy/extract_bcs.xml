@@ -11,7 +11,7 @@ fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
     <exit_code level="fatal" range="1:"/>
   </stdio>
   <version_command>python extract_bcs.py --version</version_command>
-  <command interpreter="python"><![CDATA[extract_bcs.py 
+  <command interpreter="python"><![CDATA[extract_bcs.py
 #if $positional_1 and $positional_1 is not None:
 $positional_1
 #end if
@@ -48,5 +48,7 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
+  <citations>
+      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
+  </citations>
 </tool>
-

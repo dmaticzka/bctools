@@ -20,7 +20,7 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
     <exit_code level="fatal" range="1:"/>
   </stdio>
   <version_command>python merge_pcr_duplicates.py --version</version_command>
-  <command interpreter="python"><![CDATA[merge_pcr_duplicates.py 
+  <command interpreter="python"><![CDATA[merge_pcr_duplicates.py
 #if $positional_1 and $positional_1 is not None:
 $positional_1
 #end if
@@ -52,5 +52,7 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
+  <citations>
+      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
+  </citations>
 </tool>
-
