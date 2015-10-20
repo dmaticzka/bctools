@@ -1,17 +1,13 @@
 <tool id="extract_bcs.py" name="extract_bcs.py" version="1.0">
-  <description>
-Exract barcodes from a FASTQ file according to a user-specified pattern.
-By default output is written to stdout.
-
-Example usage:
-- move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file output.fastq:
-fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
-</description>
-  <stdio>
-    <exit_code level="fatal" range="1:"/>
-  </stdio>
+  <description>Extract barcodes using pattern.</description>
+  <macros>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements" />
+  <expand macro="stdio" />
   <version_command>python extract_bcs.py --version</version_command>
-  <command interpreter="python"><![CDATA[extract_bcs.py
+  <command interpreter="python"><![CDATA[
+extract_bcs.py
 #if $positional_1 and $positional_1 is not None:
 $positional_1
 #end if
@@ -20,35 +16,29 @@ $positional_1
 $positional_2
 #end if
 
-#if $outfile and $outfile is not None:
---outfile $outfile
-#end if
-
-#if $bcs and $bcs is not None:
---bcs $bcs
-#end if
-$verbose
-$debug
 > $default]]></command>
   <inputs>
-    <param area="false" label="Path to fastq file." name="positional_1" type="text"/>
+    <param area="false" label="Barcoded sequences." name="positional_1" type="data" format="fastq"/>
     <param area="false" label="Pattern of barcode nucleotides starting at 5'-end. X positions will be moved to the header, N positions will be kept." name="positional_2" type="text"/>
-    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
-    <param area="false" help="(--bcs)" label="If set, barcodes are written to this file in FASTA format." name="bcs" optional="true" type="text"/>
-    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
-    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
   </inputs>
   <outputs>
-    <data format="txt" hidden="false" name="default"/>
+    <data hidden="false" name="default" format="fastq" />
   </outputs>
+  <tests>
+    <test>
+      <param name="positional_1" value="reads.fastq"/>
+      <param name="positional_2" value="XXXNNXXX"/>
+      <output name="default" file="result.fastq"/>
+    </test>
+  </tests>
   <help><![CDATA[
+Exract barcodes from a FASTQ file according to a user-specified pattern.
+
 Author: Daniel Maticzka
 Copyright: 2015
 License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
-  <citations>
-      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
-  </citations>
+  <expand macro="citations" />
 </tool>
