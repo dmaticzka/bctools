@@ -4,7 +4,7 @@
         <install version="1.0">
             <actions_group>
                 <actions>
-                    <action type="download_by_url" target_filename="">https://github.com/tzk/bctools/archive/v0.1.0-alpha.tar.gz</action>
+                    <action type="download_by_url" target_filename="bctools-0.1.0-alpha.tar.gz">https://github.com/tzk/bctools/archive/v0.1.0-alpha.tar.gz</action>
                     <action type="set_environment_for_install">
                         <repository name="package_biopython_1_65" owner="biopython">
                             <package name="biopython" version="1.65" />
