@@ -1,9 +1,11 @@
 <tool id="merge_pcr_duplicates.py" name="merge_pcr_duplicates.py" version="1.0">
   <description>
 </description>
-  <stdio>
-    <exit_code level="fatal" range="1:"/>
-  </stdio>
+  <macros>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements" />
+  <expand macro="stdio" />
   <version_command>python merge_pcr_duplicates.py --version</version_command>
   <command interpreter="python"><![CDATA[merge_pcr_duplicates.py
 #if $positional_1 and $positional_1 is not None:
@@ -14,8 +16,6 @@ $positional_1
 $positional_2
 #end if
 
-$verbose
-$debug
 > $default]]></command>
   <inputs>
     <param area="false" label="bed6 file containing alignments." name="positional_1" type="data" format="bed"/>
@@ -49,7 +49,5 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
-  <citations>
-      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
-  </citations>
+  <expand macro="citations" />
 </tool>
