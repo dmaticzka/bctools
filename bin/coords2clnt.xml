@@ -1,18 +1,10 @@
 <tool id="coords2clnt.py" name="coords2clnt.py" version="1.0">
-  <description>
-Given coordinates of the aligned reads, calculate positions of the crosslinked nucleotides.
-Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
-
-By default output is written to stdout.
-
-Input:
-* bed6 file containing coordinates of aligned reads
-* bed6 file containing coordinates of crosslinking events
-
-Example usage:
-- convert read coordinates from file in.bed to coordinates of the crosslinking events, written to out.bed:
-coords2clnt.py in.bed --outfile out.bed
-</description>
+  <description>Extract crosslinked nucleotide.</description>
+  <macros>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements" />
+  <expand macro="stdio" />
   <stdio>
     <exit_code level="fatal" range="1:"/>
   </stdio>
@@ -22,29 +14,32 @@ coords2clnt.py in.bed --outfile out.bed
 $positional_1
 #end if
 
-#if $outfile and $outfile is not None:
---outfile $outfile
-#end if
-$verbose
-$debug
 > $default]]></command>
   <inputs>
-    <param area="false" label="Path to bed input file." name="positional_1" type="text"/>
-    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
-    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
-    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
+    <param area="false" label="Alignments in bed format." name="positional_1" type="data" format="bed"/>
   </inputs>
   <outputs>
-    <data format="txt" hidden="false" name="default"/>
+    <data hidden="false" name="default" format="bed"/>
   </outputs>
+  <tests>
+    <test>
+      <param name="positional_1" value="merged_pcr_dupes.bed"/>
+      <output name="default" file="merged_pcr_dupes_clnts.bed"/>
+    </test>
+  </tests>
   <help><![CDATA[
+Given coordinates of the aligned reads, calculate positions of the crosslinked nucleotides.
+Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
+
+Input:
+* bed6 file containing coordinates of aligned reads
+* bed6 file containing coordinates of crosslinking events
+
 Author: Daniel Maticzka
 Copyright: 2015
 License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 ]]></help>
-  <citations>
-      <citation type="doi">10.1016/j.molcel.2013.07.001</citation>
-  </citations>
+  <expand macro="citations" />
 </tool>
