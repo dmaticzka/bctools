@@ -23,7 +23,7 @@ $verbose
 $debug
 > $default]]></command>
   <inputs>
-    <param label="Fasta file to convert." name="positional_1" type="fasta"/>
+    <param label="Fasta file to convert." name="positional_1" type="data" format="fasta"/>
     <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
     <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
   </inputs>
