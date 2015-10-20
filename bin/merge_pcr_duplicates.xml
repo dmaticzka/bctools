@@ -1,20 +1,5 @@
 <tool id="merge_pcr_duplicates.py" name="merge_pcr_duplicates.py" version="1.0">
   <description>
-Merge PCR duplicates according to random barcode library.
-
-Barcodes containing uncalled base 'N' are removed.
-By default output is written to stdout.
-
-Input:
-* bed6 file containing alignments with fastq read-id in name field
-* fasta library with fastq read-id as sequence ids
-
-Output:
-* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
-
-Example usage:
-- read PCR duplicates from file duplicates.bed and write merged results to file merged.bed:
-merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
 </description>
   <stdio>
     <exit_code level="fatal" range="1:"/>
@@ -29,23 +14,35 @@ $positional_1
 $positional_2
 #end if
 
-#if $outfile and $outfile is not None:
---outfile $outfile
-#end if
 $verbose
 $debug
 > $default]]></command>
   <inputs>
-    <param area="false" label="Path to bed6 file containing alignments." name="positional_1" type="text"/>
-    <param area="false" label="Path to fasta barcode library." name="positional_2" type="text"/>
-    <param area="false" help="(--outfile)" label="Write results to this file." name="outfile" optional="true" type="text"/>
-    <param checked="false" help="(--verbose)" label="Be verbose." name="verbose" type="boolean" truevalue="--verbose" falsevalue=""/>
-    <param checked="false" help="(--debug)" label="Print lots of debugging information" name="debug" type="boolean" truevalue="--debug" falsevalue=""/>
+    <param area="false" label="bed6 file containing alignments." name="positional_1" type="data" format="bed"/>
+    <param area="false" label="fasta barcode library." name="positional_2" type="data" format="fasta"/>
   </inputs>
   <outputs>
-    <data format="txt" hidden="false" name="default"/>
+    <data format="bed" hidden="false" name="default"/>
   </outputs>
+  <tests>
+    <test>
+      <param name="positional_1" value="pcr_dupes_sorted_2.bed"/>
+      <param name="positional_2" value="pcr_dupes_randomdict.fa"/>
+      <output name="default" file="merged_pcr_dupes.bed"/>
+    </test>
+  </tests>
   <help><![CDATA[
+Merge PCR duplicates according to random barcode library.
+
+Barcodes containing uncalled base 'N' are removed.
+
+Input:
+* bed6 file containing alignments with fastq read-id in name field
+* fasta library with fastq read-id as sequence ids
+
+Output:
+* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
+
 Author: Daniel Maticzka
 Copyright: 2015
 License: Apache
