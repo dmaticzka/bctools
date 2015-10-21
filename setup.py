@@ -23,7 +23,7 @@ setup(
         "scripttest",
         "argparse",
         "biopython",
-        "pandas>=0.16.2",
-        "pybedtools>=0.6.9",
+        "pandas>=0.14.1",
+        "pybedtools>=0.6.6",
     ]
 )

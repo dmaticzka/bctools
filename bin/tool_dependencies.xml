@@ -9,12 +9,19 @@
                         <repository name="package_biopython_1_65" owner="biopython">
                             <package name="biopython" version="1.65" />
                         </repository>
-                        <repository name="package_python_2_7_pandas_0_16" owner="iuc">
+                        <!-- <repository name="package_python_2_7_pandas_0_16" owner="iuc">
                             <package name="pandas" version="0.16" />
+                        </repository> -->
+                        <repository name="package_pandas_0_14" owner="iuc">
+                            <package name="pandas" version="0.14" />
                         </repository>
-                        <repository name="package_python_2_7_pybedtools_0_6_9" owner="iuc">
+                        <!-- <repository name="package_python_2_7_pybedtools_0_6_9" owner="iuc">
                             <package name="pybedtools" version="0.6.9" />
+                        </repository> -->
+                        <repository name="package_pybedtools_0_6_6" owner="iuc">
+                            <package name="pybedtools" version="0.6.6" />
                         </repository>
+
                     </action>
                     <action type="shell_command">
                         export PYTHONPATH=$PYTHONPATH:$INSTALL_DIR/lib/python &amp;&amp;
