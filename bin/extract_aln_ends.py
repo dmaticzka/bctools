@@ -14,14 +14,14 @@ This script only reports results for alignments that are properly aligned in FR
 By default output is written to stdout.
 
 Input:
-* sam file containing bowtie2 alignments (paired-end sequencing)
+* sam file containing alignments (paired-end sequencing)
 
 Output:
 * bed6 file containing outer coordinates (sorted by read id)
 
 Example usage:
 - Extract coordinates from file input.bam and write to file output.bed
-extract_aln_ends_bt2.py input.bam --out output.bed
+extract_aln_ends.py input.bam --out output.bed
 """
 
 epilog = """
@@ -58,7 +58,7 @@ parser = argparse.ArgumentParser(description=tool_description,
 # positional arguments
 parser.add_argument(
     "sam",
-    help="Path to sam/bam file containing alignments.")
+    help="Path to sam file containing alignments.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
