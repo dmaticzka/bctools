@@ -1,6 +1,5 @@
 <tool id="merge_pcr_duplicates.py" name="merge_pcr_duplicates.py" version="1.0">
-  <description>
-</description>
+  <description>Merge PCR duplicates according to random barcode library.</description>
   <macros>
     <import>macros.xml</import>
   </macros>
