@@ -4,7 +4,7 @@
         <install version="1.0">
             <actions_group>
                 <actions>
-                    <action type="download_by_url" target_filename="bctools-0.1.0-alpha.tar.gz">https://github.com/tzk/bctools/archive/v0.1.0-alpha.tar.gz</action>
+                    <action type="download_by_url" target_filename="bctools-0.1.0-alpha1.tar.gz">https://github.com/tzk/bctools/archive/v0.1.0-alpha1.tar.gz</action>
                     <action type="set_environment_for_install">
                         <repository name="package_biopython_1_65" owner="biopython">
                             <package name="biopython" version="1.65" />
@@ -21,14 +21,11 @@
                         <repository name="package_pybedtools_0_6_6" owner="iuc">
                             <package name="pybedtools" version="0.6.6" />
                         </repository>
-
                     </action>
                     <action type="shell_command">
-                        export PYTHONPATH=$PYTHONPATH:$INSTALL_DIR/lib/python &amp;&amp;
-                        python setup.py install --install-lib $INSTALL_DIR/lib/python
+                        python setup.py install --install-scripts $INSTALL_DIR
                     </action>
                     <action type="set_environment">
-                        <environment_variable action="prepend_to" name="PYTHONPATH">$INSTALL_DIR/lib/python</environment_variable>
                         <environment_variable name="BCTOOLS_ROOT_DIR" action="set_to">$INSTALL_DIR</environment_variable>
                     </action>
                 </actions>
