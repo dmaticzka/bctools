@@ -1,4 +1,4 @@
-<tool id="remove_tail.py" name="remove_tail.py" version="1.0">
+<tool id="remove_tail.py" name="remove_tail.py" version="0.1.0">
   <description>Remove nts from 3'-end.</description>
   <macros>
     <import>macros.xml</import>

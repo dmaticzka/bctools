@@ -1,4 +1,4 @@
-<tool id="rm_spurious_events.py" name="rm_spurious_events.py" version="1.0">
+<tool id="rm_spurious_events.py" name="rm_spurious_events.py" version="0.1.0">
   <description>Remove spurious events.</description>
   <macros>
     <import>macros.xml</import>

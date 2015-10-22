@@ -1,4 +1,4 @@
-<tool id="extract_bcs.py" name="extract_bcs.py" version="1.0">
+<tool id="extract_bcs.py" name="extract_bcs.py" version="0.1.0">
   <description>Extract barcodes using pattern.</description>
   <macros>
     <import>macros.xml</import>

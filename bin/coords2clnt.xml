@@ -1,4 +1,4 @@
-<tool id="coords2clnt.py" name="coords2clnt.py" version="1.0">
+<tool id="coords2clnt.py" name="coords2clnt.py" version="0.1.0">
   <description>Extract crosslinked nucleotide.</description>
   <macros>
     <import>macros.xml</import>
