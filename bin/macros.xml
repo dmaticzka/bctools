@@ -1,4 +1,11 @@
 <macros>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="1.65">biopython</requirement>
+            <requirement type="package" version="0.14">pandas</requirement>
+            <requirement type="package" version="0.6.6">pybedtools</requirement>
+        </requirements>
+    </xml>
     <xml name="stdio">
         <stdio>
           <exit_code level="fatal" range="1:"/>
