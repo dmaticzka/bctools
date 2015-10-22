@@ -1,9 +1,4 @@
 <macros>
-    <xml name="requirements">
-        <requirements>
-            <requirement type="package" version="0.1.0">bctools</requirement>
-        </requirements>
-    </xml>
     <xml name="stdio">
         <stdio>
           <exit_code level="fatal" range="1:"/>
