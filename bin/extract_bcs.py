@@ -6,9 +6,9 @@ Exract barcodes from a FASTQ file according to a user-specified pattern.
 By default output is written to stdout.
 
 Example usage:
-- move nucleotides at positions 1-3 and 6-7 to FASTQ header and write to file
-  output.fastq:
-fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq
+- remove barcode nucleotides at positions 1-3 and 6-7 from FASTQ; write modified
+  FASTQ entries to output.fastq and barcode nucleotides to barcodes.fa:
+fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq --bcs barcodes.fa
 """
 
 epilog = """
@@ -50,6 +50,12 @@ parser.add_argument(
     dest="out_bc_fasta",
     help="If set, barcodes are written to this file in FASTA format.")
 parser.add_argument(
+    "-a", "--add-bc-to-fastq",
+    dest="add_to_head",
+    help="If set, append extracted barcodes to the FASTQ headers.",
+    action="store_true"
+)
+parser.add_argument(
     "-v", "--verbose",
     help="Be verbose.",
     action="store_true")
@@ -60,7 +66,7 @@ parser.add_argument(
 parser.add_argument(
     '--version',
     action='version',
-    version='0.1.0')
+    version='1.0.0')
 
 args = parser.parse_args()
 if args.debug:
@@ -153,7 +159,10 @@ for header, seq, qual in FastqGeneralIterator(open(args.infile)):
         continue
 
     # write barcode nucleotides into header
-    annotated_header = header + " " + barcode
+    if args.add_to_head:
+        annotated_header = " ".join([header, barcode])
+    else:
+        annotated_header = header
     samout.write("@%s\n%s\n+\n%s\n" % (annotated_header, new_seq, new_qual))
 
     # write barcode to fasta if requested
