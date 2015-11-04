@@ -1,5 +1,5 @@
-<tool id="convert_bc_to_binary_RY.py" name="convert_bc_to_binary_RY.py" version="0.1.0">
-  <description>Convert to binary barcodes.</description>
+<tool id="convert_bc_to_binary_RY.py" name="Create binary barcodes" version="0.1.0">
+  <description>from regular barcodes.</description>
   <macros>
     <import>macros.xml</import>
   </macros>
@@ -25,15 +25,21 @@ $positional_1
     </test>
   </tests>
   <help><![CDATA[
-Convert standard nucleotides to IUPAC nucleotide codes used for binary barcodes.
 
+**What it does**
+
+This tool converts standard nucleotides to IUPAC nucleotide codes used for binary barcodes.
 A and G are converted to nucleotide code R. T, U and C are converted to Y.
 
-Author: Daniel Maticzka
-Copyright: 2015
-License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
+**Input**
+
+The input for this tool is a fasta file.
+
+**Output**
+
+This tool produces a single fasta file containing the converted barcodes.
+
+** References **
 ]]></help>
   <expand macro="citations" />
 </tool>
