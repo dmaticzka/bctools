@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='bctools',
-    version='1.0.0',
+    version='0.2.0',
     description='A set of tools for handling barcodes in NGS data.',
     author='Daniel Maticzka',
     author_email='maticzkd@informatik.uni-freiburg.de',
