@@ -113,7 +113,23 @@ def test_writing_bcs_to_file():
         datadir_rel + "reads.fastq",
         "XXXNNXXX",
         "--add-bc-to-fastq",
+        "--bcs", "extracted_bcs.fastq",
+    )
+    assert(cmp(
+        testdir + "extracted_bcs.fastq",
+        datadir + "extracted_bcs.fastq"
+    ))
+
+
+def test_writing_bcs_to_file_fasta_out():
+    "Extract and remove barcodes, write extracted barcodes to separate fasta file."
+    env.run(
+        bindir_rel + "extract_bcs.py",
+        datadir_rel + "reads.fastq",
+        "XXXNNXXX",
+        "--add-bc-to-fastq",
         "--bcs", "extracted_bcs.fa",
+        "--fasta-barcodes",
     )
     assert(cmp(
         testdir + "extracted_bcs.fa",
@@ -128,7 +144,27 @@ def test_writing_bcs_to_file_no_move_to_head():
         datadir_rel + "reads.fastq",
         "XXXNNXXX",
         "--out", "outfile_original_head.fastq",
+        "--bcs", "extracted_bcs2.fastq",
+    )
+    assert(cmp(
+        testdir + "extracted_bcs2.fastq",
+        datadir + "extracted_bcs.fastq"
+    ))
+    assert(cmp(
+        testdir + "outfile_original_head.fastq",
+        datadir + "result_original_head.fastq"
+    ))
+
+
+def test_writing_bcs_to_file_no_move_to_head_fasta_out():
+    "Extract and remove barcodes, write extracted barcodes to separate fasta file, don't write extracted barcodes to fastq header."
+    env.run(
+        bindir_rel + "extract_bcs.py",
+        datadir_rel + "reads.fastq",
+        "XXXNNXXX",
+        "--out", "outfile_original_head.fastq",
         "--bcs", "extracted_bcs.fa",
+        "--fasta-barcodes",
     )
     assert(cmp(
         testdir + "extracted_bcs.fa",

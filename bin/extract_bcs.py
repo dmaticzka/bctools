@@ -8,7 +8,7 @@ By default output is written to stdout.
 Example usage:
 - remove barcode nucleotides at positions 1-3 and 6-7 from FASTQ; write modified
   FASTQ entries to output.fastq and barcode nucleotides to barcodes.fa:
-fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq --bcs barcodes.fa
+fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq --bcs barcodes.fastq
 """
 
 epilog = """
@@ -48,13 +48,17 @@ parser.add_argument(
 parser.add_argument(
     "-b", "--bcs",
     dest="out_bc_fasta",
-    help="If set, barcodes are written to this file in FASTA format.")
+    help="Write barcodes to this file in FASTQ format.")
+parser.add_argument(
+    "--fasta-barcodes",
+    dest="save_bcs_as_fa",
+    action="store_true",
+    help="Save extracted barcodes in FASTA format.")
 parser.add_argument(
     "-a", "--add-bc-to-fastq",
     dest="add_to_head",
-    help="If set, append extracted barcodes to the FASTQ headers.",
-    action="store_true"
-)
+    help="Append extracted barcodes to the FASTQ headers.",
+    action="store_true")
 parser.add_argument(
     "-v", "--verbose",
     help="Be verbose.",
@@ -66,7 +70,7 @@ parser.add_argument(
 parser.add_argument(
     '--version',
     action='version',
-    version='1.0.0')
+    version='0.1.0')
 
 args = parser.parse_args()
 if args.debug:
@@ -82,8 +86,10 @@ if args.outfile:
     logging.info("  outfile: enabled writing to file")
     logging.info("  outfile: '{}'".format(args.outfile))
 if args.out_bc_fasta:
-    logging.info("  bcs: enabled writing barcodes to fasta file")
+    logging.info("  bcs: enabled writing barcodes to fastq file")
     logging.info("  bcs: {}".format(args.out_bc_fasta))
+if args.save_bcs_as_fa:
+    logging.info("  fasta-barcodes: write barcodes in fasta format instead of fastq")
 logging.info("")
 
 # check if supplied pattern is valid
@@ -136,9 +142,12 @@ for header, seq, qual in FastqGeneralIterator(open(args.infile)):
 
     # extract barcode nucleotides
     barcode_list = []
+    barcode_qual_list = []
     for bcstart, bcstop in barcode_positions:
         barcode_list.append(seq[bcstart:bcstop])
+        barcode_qual_list.append(qual[bcstart:bcstop])
     barcode = "".join(barcode_list)
+    barcode_quals = "".join(barcode_qual_list)
     logging.debug("extracted barcode: {}".format(barcode))
 
     # create new sequence and quality string without barcode nucleotides
@@ -167,7 +176,10 @@ for header, seq, qual in FastqGeneralIterator(open(args.infile)):
 
     # write barcode to fasta if requested
     if args.out_bc_fasta is not None:
-        faout.write(">{}\n{}\n".format(header, barcode))
+        if args.save_bcs_as_fa:
+            faout.write(">{}\n{}\n".format(header, barcode))
+        else:
+            faout.write("@{}\n{}\n+\n{}\n".format(header, barcode, barcode_quals))
 
 # close files
 samout.close()
