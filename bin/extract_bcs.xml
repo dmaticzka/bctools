@@ -1,5 +1,5 @@
-<tool id="extract_bcs.py" name="extract_bcs.py" version="0.1.0">
-  <description>Extract barcodes using pattern.</description>
+<tool id="extract_bcs.py" name="Extract barcodes" version="1.0.0">
+  <description>using pattern.</description>
   <macros>
     <import>macros.xml</import>
   </macros>
@@ -16,19 +16,23 @@ $positional_1
 $positional_2
 #end if
 
+--bcs $extractedbcs
+
 > $default]]></command>
   <inputs>
     <param area="false" label="Barcoded sequences." name="positional_1" type="data" format="fastq"/>
     <param area="false" label="Pattern of barcode nucleotides starting at 5'-end. X positions will be moved to the header, N positions will be kept." name="positional_2" type="text"/>
   </inputs>
   <outputs>
-    <data hidden="false" name="default" format="fastq" />
+    <data hidden="false" name="default" format="fastq"/>
+    <data name="extractedbcs" format="fasta"/>
   </outputs>
   <tests>
     <test>
       <param name="positional_1" value="reads.fastq"/>
       <param name="positional_2" value="XXXNNXXX"/>
-      <output name="default" file="result.fastq"/>
+      <output name="default" file="result_original_head.fastq"/>
+      <output name="extractedbcs" file="result.fa"/>
     </test>
   </tests>
   <help><![CDATA[

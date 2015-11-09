@@ -1,5 +1,5 @@
-<tool id="remove_tail.py" name="remove_tail.py" version="0.1.0">
-  <description>Remove nts from 3'-end.</description>
+<tool id="remove_tail.py" name="Remove 3'-end nts" version="0.1.0">
+  <description>from FASTQ</description>
   <macros>
     <import>macros.xml</import>
   </macros>
