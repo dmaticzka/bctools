@@ -24,7 +24,7 @@ def test_illegal_bcpattern():
     "Check if extract_bcs.py reports illegal barcode pattern"
     run = env.run(
         bindir_rel + "extract_bcs.py",
-        datadir_rel + "/reads.fastq",
+        datadir_rel + "reads.fastq",
         "ILLEGAL",
         expect_error=True
     )

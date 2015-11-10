@@ -13,15 +13,15 @@ $positional_1
 #end if
 > $default]]></command>
   <inputs>
-    <param label="Fasta file to convert." name="positional_1" type="data" format="fasta"/>
+    <param label="Fastq file to convert." name="positional_1" type="data" format="fastq"/>
   </inputs>
   <outputs>
-    <data hidden="false" name="default" format="fasta"/>
+    <data hidden="false" name="default" format="fastq"/>
   </outputs>
   <tests>
     <test>
-      <param name="positional_1" value="result.fa"/>
-      <output name="default" file="converted_bcs.fa"/>
+      <param name="positional_1" value="extracted_bcs.fastq"/>
+      <output name="default" file="converted_bcs.fastq"/>
     </test>
   </tests>
   <help><![CDATA[

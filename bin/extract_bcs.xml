@@ -25,14 +25,14 @@ $positional_2
   </inputs>
   <outputs>
     <data hidden="false" name="default" format="fastq"/>
-    <data name="extractedbcs" format="fasta"/>
+    <data name="extractedbcs" format="fastq"/>
   </outputs>
   <tests>
     <test>
       <param name="positional_1" value="reads.fastq"/>
       <param name="positional_2" value="XXXNNXXX"/>
       <output name="default" file="result_original_head.fastq"/>
-      <output name="extractedbcs" file="result.fa"/>
+      <output name="extractedbcs" file="extracted_bcs.fastq"/>
     </test>
   </tests>
   <help><![CDATA[
