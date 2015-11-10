@@ -8,7 +8,7 @@ to stdout.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
-* fasta library with fastq read-id as sequence ids
+* fastq library of random barcodes
 
 Output:
 * bed6 file with random barcode in name field and number of PCR duplicates as
@@ -61,6 +61,11 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
+parser.add_argument(
+    "--fasta-library",
+    dest="fasta_library",
+    action="store_true",
+    help="Read random barcode library as fasta format.")
 # misc arguments
 parser.add_argument(
     "-v", "--verbose",
@@ -93,7 +98,10 @@ logging.info("")
 
 # load barcode library into dictionary
 input_handle = open(args.bclib, "rU")
-input_seq_iterator = SeqIO.parse(input_handle, "fasta")
+if args.fasta_library:
+    input_seq_iterator = SeqIO.parse(input_handle, "fasta")
+else:
+    input_seq_iterator = SeqIO.parse(input_handle, "fastq")
 bcs = pd.DataFrame.from_records(
     data=fasta_tuple_generator(input_seq_iterator),
     columns=["read_id", "bc"])

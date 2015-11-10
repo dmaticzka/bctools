@@ -38,7 +38,7 @@ Barcodes containing uncalled base 'N' are removed.
 Input::
 
 * bed6 file containing alignments with fastq read-id in name field
-* fasta library with fastq read-id as sequence ids
+* fastq library of random barcodes
 
 Output::
 
