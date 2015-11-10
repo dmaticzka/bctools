@@ -39,11 +39,16 @@ parser = argparse.ArgumentParser(description=tool_description,
 # positional arguments
 parser.add_argument(
     "infile",
-    help="Path to fasta input file.")
+    help="Path to fastq input file.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
+parser.add_argument(
+    "--fasta-format",
+    dest="fasta_format",
+    help="Read and write fasta instead of fastq format.",
+    action="store_true")
 parser.add_argument(
     "-v", "--verbose",
     help="Be verbose.",
@@ -73,8 +78,13 @@ def translate_nt_to_RY(seq):
 def translate_nt_to_RY_iterator(robj):
     """Translate SeqRecords sequences to RY alphabet."""
     for record in robj:
+        if not args.fasta_format:
+            saved_letter_annotations = record.letter_annotations
+        record.letter_annotations = {}
         record.seq = Seq(translate_nt_to_RY(str(record.seq)),
                          IUPAC.unambiguous_dna)
+        if not args.fasta_format:
+            record.letter_annotations = saved_letter_annotations
         yield record
 
 # handle arguments
@@ -94,8 +104,14 @@ logging.info("")
 
 # get input iterator
 input_handle = open(args.infile, "rU")
-input_seq_iterator = SeqIO.parse(input_handle, "fasta")
+if args.fasta_format:
+    input_seq_iterator = SeqIO.parse(input_handle, "fasta")
+else:
+    input_seq_iterator = SeqIO.parse(input_handle, "fastq")
 convert_seq_iterator = translate_nt_to_RY_iterator(input_seq_iterator)
 output_handle = (open(args.outfile, "w") if args.outfile is not None else stdout)
-SeqIO.write(convert_seq_iterator, output_handle, "fasta")
+if args.fasta_format:
+    SeqIO.write(convert_seq_iterator, output_handle, "fasta")
+else:
+    SeqIO.write(convert_seq_iterator, output_handle, "fastq")
 output_handle.close()

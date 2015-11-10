@@ -33,11 +33,11 @@ A and G are converted to nucleotide code R. T, U and C are converted to Y.
 
 **Input**
 
-The input for this tool is a fasta file.
+The input for this tool is a fastq file.
 
 **Output**
 
-This tool produces a single fasta file containing the converted barcodes.
+This tool produces a single fastq file containing the converted barcodes.
 
 ** References **
 ]]></help>
