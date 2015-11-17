@@ -9,4 +9,7 @@
     <package name="pybedtools" version="0.6.6">
         <repository name="package_pybedtools_0_6_6" owner="iuc"/>
     </package>
+    <package name="flexbar" version="2.5">
+        <repository name="package_flexbar_2_5" owner="iuc"/>
+    </package>
 </tool_dependency>

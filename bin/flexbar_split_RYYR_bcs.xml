@@ -1,14 +1,15 @@
 
 <!-- Flexbar tool definition for Galaxy, version 2.5 -->
 <!-- Author: Johannes Roehr -->
+<!-- Modified by Daniel Maticzka as specialized tool for splitting binary barcodes. -->
 
 
-<tool id="flexbar" name="Flexbar" version="2.5" force_history_refresh="True">
-	
-	<description>flexible barcode and adapter removal</description>
-    
+<tool id="flexbar_split_RYYR_bcs" name="Split by binary barcodes" version="2.5" force_history_refresh="True">
+
+	<description>using RYYR IUPAC pattern.</description>
+
 	<requirements>
-        <requirement type="binary" version="2.5">flexbar</requirement>
+        <requirement type="package" version="2.5">flexbar</requirement>
     </requirements>
 	
 	<version_command>flexbar --version</version_command>
