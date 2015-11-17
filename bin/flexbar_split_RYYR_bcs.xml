@@ -4,7 +4,7 @@
 <!-- Modified by Daniel Maticzka as specialized tool for splitting binary barcodes. -->
 
 
-<tool id="flexbar_split_RYYR_bcs" name="Split by binary barcodes" version="2.5" force_history_refresh="True">
+<tool id="flexbar_split_RYYR_bcs" name="Split by binary barcodes" version="2.5">
 
     <description>using RYYR IUPAC pattern.</description>
 
