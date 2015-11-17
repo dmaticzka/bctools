@@ -46,6 +46,9 @@
 
       --barcode-threshold $bThresh
 
+      --max-uncalled $maxUncalled
+		--min-read-length $minReadLen
+
       > $output
 
       ;
@@ -69,6 +72,10 @@
 		<param format="fasta,fastq,fastqsanger,fastqsolexa,fastqillumina,csfasta,fastqcssanger" name="bReads" type="data" label="Separate barcode reads" optional="false"/>
 
 		<param name="bThresh" size="4" type="integer" value="1" label="Threshold" optional="false" help="allowed mismatches and indels per 10 bases"/>
+
+      <param name="maxUncalled" size="4" type="integer" value="0"  label="Max uncalled" optional="false" help="allowed uncalled bases per read"/>
+
+      <param name="minReadLen"  size="4" type="integer" value="18" label="Minimum read length" optional="false" help="shorter reads are discarded"/>
 
   	</inputs>
 
