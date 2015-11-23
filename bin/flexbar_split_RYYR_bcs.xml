@@ -10,7 +10,7 @@
 
     <requirements>
         <requirement type="package" version="2.5">flexbar</requirement>
-     </requirements>
+    </requirements>
 
     <version_command>flexbar --version</version_command>
 
