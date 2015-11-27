@@ -1,14 +1,15 @@
 
 <!-- Flexbar tool definition for Galaxy, version 2.5 -->
 <!-- Author: Johannes Roehr -->
-
+<!-- Modified by Daniel Maticzka -->
+<!--     * changed dependency to use separate flexbar package -->
 
 <tool id="flexbar" name="Flexbar" version="2.5" force_history_refresh="True">
 
     <description>flexible barcode and adapter removal</description>
 
     <requirements>
-        <requirement type="binary" version="2.5">flexbar</requirement>
+        <requirement type="package" version="2.5">flexbar</requirement>
     </requirements>
 
     <version_command>flexbar --version</version_command>
