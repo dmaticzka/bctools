@@ -14,7 +14,7 @@ $positional_1
 
 > $default]]></command>
   <inputs>
-    <param area="false" label="Bam input." name="positional_1" type="data" format="bam"/>
+    <param area="false" label="Alignments in SAM or BAM format." name="positional_1" type="data" format="sam,bam"/>
   </inputs>
   <outputs>
     <data format="bed" hidden="false" name="default"/>

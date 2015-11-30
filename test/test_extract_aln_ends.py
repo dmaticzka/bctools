@@ -28,7 +28,21 @@ def test_call_fileout():
         bindir_rel + "extract_aln_ends.py",
         datadir_rel + infile,
         "--outfile", outfile,
-        "--sam-input",
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "tworeads_aln_ends.bed"
+    ))
+
+
+def test_call_fileout_baminput():
+    "Call extract_aln_ends.py with infile and outfile."
+    infile = "twomates.bam"
+    outfile = "tworeads_aln_ends_baminput.bed"
+    env.run(
+        bindir_rel + "extract_aln_ends.py",
+        datadir_rel + infile,
+        "--outfile", outfile,
     )
     assert(cmp(
         testdir + outfile,
@@ -43,7 +57,6 @@ def test_call_stdout():
     run = env.run(
         bindir_rel + "extract_aln_ends.py",
         datadir_rel + infile,
-        "--sam-input",
     )
     with open(testdir + outfile, "w") as b:
         b.write(run.stdout)

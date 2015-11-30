@@ -14,7 +14,7 @@ This script only reports results for alignments that are properly aligned in FR
 By default output is written to stdout.
 
 Input:
-* bam file containing alignments (paired-end sequencing)
+* alignments in SAM or BAM format (paired-end sequencing)
 
 Output:
 * bed6 file containing outer coordinates (sorted by read id)
@@ -58,15 +58,11 @@ parser = argparse.ArgumentParser(description=tool_description,
 # positional arguments
 parser.add_argument(
     "infile",
-    help="Path to bam file containing alignments.")
+    help="Path to alignments in SAM or BAM format.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
-parser.add_argument(
-    "-s", "--sam-input",
-    help="Read sam instead of bam.",
-    action="store_true")
 # misc arguments
 parser.add_argument(
     "-v", "--verbose",
