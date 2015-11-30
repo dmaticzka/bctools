@@ -112,6 +112,9 @@ alns = pd.read_csv(
     sep="\t",
     names=["chrom", "start", "stop", "read_id", "score", "strand"])
 
+# keep id parts up to first whitespace
+alns["read_id"] = alns["read_id"].str.split(' ').str.get(0)
+
 # combine barcode library and alignments
 bcalib = pd.merge(
     bcs, alns,

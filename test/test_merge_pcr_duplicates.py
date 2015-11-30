@@ -37,6 +37,23 @@ def test_call_fileout():
     ))
 
 
+def test_call_extended_ids():
+    "Call merge_pcr_duplicates.py with infile and outfile."
+    infile = "pcr_dupes_sorted_2_extended_ids.bed"
+    inlib = "pcr_dupes_randomdict_extended_ids.fastq"
+    outfile = "merged_pcr_dupes_extended_ids.bed"
+    env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile,
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes.bed"
+    ))
+
+
 def test_call_fileout_fastalib():
     "Call merge_pcr_duplicates.py with infile and outfile, use fasta random barcode library"
     infile = "pcr_dupes_sorted_2.bed"
