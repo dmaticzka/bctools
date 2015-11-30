@@ -14,7 +14,7 @@ This script only reports results for alignments that are properly aligned in FR
 By default output is written to stdout.
 
 Input:
-* sam file containing alignments (paired-end sequencing)
+* bam file containing alignments (paired-end sequencing)
 
 Output:
 * bed6 file containing outer coordinates (sorted by read id)
@@ -57,12 +57,16 @@ parser = argparse.ArgumentParser(description=tool_description,
                                  formatter_class=DefaultsRawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
-    "sam",
-    help="Path to sam file containing alignments.")
+    "infile",
+    help="Path to bam file containing alignments.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
+parser.add_argument(
+    "-s", "--sam-input",
+    help="Read sam instead of bam.",
+    action="store_true")
 # misc arguments
 parser.add_argument(
     "-v", "--verbose",
@@ -75,7 +79,7 @@ parser.add_argument(
 parser.add_argument(
     '--version',
     action='version',
-    version='0.1.0')
+    version='0.2.0')
 
 args = parser.parse_args()
 
@@ -86,7 +90,7 @@ elif args.verbose:
 else:
     logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
 logging.info("Parsed arguments:")
-logging.info("  sam: '{}'".format(args.sam))
+logging.info("  infile: '{}'".format(args.infile))
 if args.outfile:
     logging.info("  outfile: enabled writing to file")
     logging.info("  outfile: '{}'".format(args.outfile))
@@ -103,7 +107,7 @@ try:
 
     # sort by id
     logging.debug("calling samtools sort")
-    pysam.sort(args.sam, "-n", "-o{}".format(fn_sorted), "-T sortprefix")
+    pysam.sort(args.infile, "-n", "-o{}".format(fn_sorted), "-T sortprefix")
 
     # fix mate information
     # also removes secondary and unmapped reads

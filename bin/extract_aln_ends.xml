@@ -14,7 +14,7 @@ $positional_1
 
 > $default]]></command>
   <inputs>
-    <param area="false" label="Sam input." name="positional_1" type="data" format="sam"/>
+    <param area="false" label="Bam input." name="positional_1" type="data" format="bam"/>
   </inputs>
   <outputs>
     <data format="bed" hidden="false" name="default"/>
@@ -26,7 +26,7 @@ $positional_1
     </test>
   </tests>
   <help><![CDATA[
-Extract alignment ends from sam file.
+Extract alignment ends from bam file.
 
 The resulting bed file contains the outer coordinates of the alignments. The
 bed name field is set to the read id and the score field is set to the edit
@@ -38,7 +38,7 @@ This tool only reports results for alignments that are properly aligned in FR
 
 Input:
 
-* sam file containing alignments (paired-end sequencing)
+* bam file containing alignments (paired-end sequencing)
 
 Output:
 

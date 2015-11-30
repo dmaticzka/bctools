@@ -27,7 +27,8 @@ def test_call_fileout():
     env.run(
         bindir_rel + "extract_aln_ends.py",
         datadir_rel + infile,
-        "--outfile", outfile
+        "--outfile", outfile,
+        "--sam-input",
     )
     assert(cmp(
         testdir + outfile,
@@ -41,7 +42,8 @@ def test_call_stdout():
     outfile = "tworeads_aln_ends_stdout.bed"
     run = env.run(
         bindir_rel + "extract_aln_ends.py",
-        datadir_rel + infile
+        datadir_rel + infile,
+        "--sam-input",
     )
     with open(testdir + outfile, "w") as b:
         b.write(run.stdout)
