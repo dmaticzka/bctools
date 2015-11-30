@@ -9,6 +9,9 @@
     <package name="pybedtools" version="0.6.6">
         <repository name="package_pybedtools_0_6_6" owner="iuc"/>
     </package>
+    <package name="bedtools" version="2.24">
+        <repository changeset_revision="e6f4a7398a47" name="package_bedtools_2_24" owner="iuc" toolshed="https://testtoolshed.g2.bx.psu.edu" />
+    </package>
     <package name="flexbar" version="2.5">
         <repository name="package_flexbar_2_5" owner="rnateam"/>
     </package>
