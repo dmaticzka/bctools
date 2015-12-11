@@ -92,7 +92,7 @@
 
 **Description**
 
-This tool splits paired-end reads according to an external set of barcode reads in RY IUPAC format according to patterns RYYR and YRRY using Flexbar.
+This tool splits paired-end reads according to an external set of barcode reads in RY IUPAC format according to patterns RYYR (replicate A) and YRRY (replicate B) using Flexbar.
 
 .. _project: https://github.com/seqan/flexbar
 
