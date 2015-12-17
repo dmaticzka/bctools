@@ -4,7 +4,7 @@
 <!-- Modified by Daniel Maticzka -->
 <!--     * changed dependency to use separate flexbar package -->
 
-<tool id="flexbar_dsc" name="Flexbar" version="2.5">
+<tool id="flexbar_dsc" name="Flexbar DSC" version="2.5">
 
     <description>flexible barcode and adapter removal (data set collections)</description>
 
@@ -13,8 +13,6 @@
     </requirements>
 
     <version_command>flexbar --version</version_command>
-
-    <command interpreter="perl">
 
         flexbar
 
