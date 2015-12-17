@@ -6,7 +6,7 @@
 
 <tool id="flexbar_dsc" name="Flexbar" version="2.5">
 
-    <description>flexible barcode and adapter removal</description>
+    <description>flexible barcode and adapter removal (data set collections)</description>
 
     <requirements>
         <requirement type="package" version="2.5">flexbar</requirement>
