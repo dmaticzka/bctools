@@ -4,7 +4,7 @@
 <!-- Modified by Daniel Maticzka -->
 <!--     * changed dependency to use separate flexbar package -->
 
-<tool id="flexbar_dsc" name="Flexbar DSC" version="2.5">
+<tool id="flexbardsc" name="Flexbar DSC" version="2.5">
 
     <description>flexible barcode and adapter removal (data set collections)</description>
 
@@ -13,6 +13,8 @@
     </requirements>
 
     <version_command>flexbar --version</version_command>
+
+    <command><![CDATA[
 
         flexbar
 
@@ -135,14 +137,10 @@
             $cLogging.rndTags
         #end if
 
-        --target FlexbarOutput
-        &&
+        --target FlexbarOutput &&
         for f in *_1.fastq; do mv "\$f" "`basename \$f _1.fastq`_forward.fastq"; done &&
         for f in *_2.fastq; do mv "\$f" "`basename \$f _2.fastq`_reverse.fastq"; done
-
-
-
-    </command>
+    ]]></command>
 
 
     <inputs>
@@ -431,6 +429,7 @@
       -->
         <discover_datasets pattern="FlexbarOutput_(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" metadata_source="reads" visible="true" />
         <!--<data format="txt" name="output" metadata_source="reads"/>-->
+        </collection>
     </outputs>
 
 
