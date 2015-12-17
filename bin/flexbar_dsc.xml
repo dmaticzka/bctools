@@ -137,9 +137,9 @@
             $cLogging.rndTags
         #end if
 
-        --target FlexbarOutput 
+        --target FlexbarOutput
         &&
-        for f in *_1.fastq; do mv "\$f" "`basename \$f _1.fastq`_forward.fastq"; done && 
+        for f in *_1.fastq; do mv "\$f" "`basename \$f _1.fastq`_forward.fastq"; done &&
         for f in *_2.fastq; do mv "\$f" "`basename \$f _2.fastq`_reverse.fastq"; done
 
 
