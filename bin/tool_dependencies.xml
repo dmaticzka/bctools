@@ -6,11 +6,8 @@
     <package name="pandas" version="0.16">
         <repository name="package_python_2_7_pandas_0_16" owner="iuc"/>
     </package>
-    <package name="pybedtools" version="0.6.9">
-        <repository name="package_python_2_7_pybedtools_0_6_9" owner="iuc"/>
-    </package>
-    <package name="bedtools" version="2.24">
-        <repository name="package_bedtools_2_24" owner="iuc"/>
+    <package name="pybedtools" version="0.7.4">
+        <repository name="package_python_2_7_pybedtools_0_7_4" owner="iuc"/>
     </package>
     <package name="pysam" version="0.8.3">
         <repository name="package_python_2_7_pysam_0_8_3" owner="iuc"/>
