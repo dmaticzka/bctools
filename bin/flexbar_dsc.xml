@@ -431,7 +431,7 @@
                    identifier in the nested collection and identifier_1 is either
                    forward or reverse (for instance samp1_forward.fq).
               -->
-            <discover_datasets pattern="FlexbarOutput_barcode_(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" metadata_source="reads" visible="false" />
+            <discover_datasets pattern="FlexbarOutput_barcode_(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" metadata_source="reads" visible="true" />
         </collection>
     </outputs>
 
