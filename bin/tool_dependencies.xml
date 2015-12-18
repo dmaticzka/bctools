@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <tool_dependency>
-    <package name="biopython" version="1.65">
+    <package name="biopython" version="1.66">
         <repository name="package_python_2_7_biopython_1_66" owner="iuc"/>
     </package>
     <package name="pandas" version="0.16">
