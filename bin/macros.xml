@@ -1,7 +1,7 @@
 <macros>
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="1.65">biopython</requirement>
+            <requirement type="package" version="1.66">biopython</requirement>
             <requirement type="package" version="0.16">pandas</requirement>
             <requirement type="package" version="0.7.4">pybedtools</requirement>
         </requirements>
