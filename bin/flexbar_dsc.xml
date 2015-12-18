@@ -6,6 +6,7 @@
 <!--     * use paired-end dataset collection as output -->
 
 <!-- * currently only works for barcode splitting with paired-end reads -->
+<!-- * output is fixed to fastqsanger -->
 
 <tool id="flexbardsc" name="Flexbar DSC" version="2.5">
 
