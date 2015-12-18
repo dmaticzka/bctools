@@ -3,6 +3,9 @@
 <!-- Author: Johannes Roehr -->
 <!-- Modified by Daniel Maticzka -->
 <!--     * changed dependency to use separate flexbar package -->
+<!--     * use paired-end dataset collection as output -->
+
+<!-- * currently only works for barcode splitting with paired-end reads -->
 
 <tool id="flexbardsc" name="Flexbar DSC" version="2.5">
 
@@ -421,14 +424,14 @@
     </stdio>
 
     <outputs>
-        <collection name="list_output" type="list:paired" label="Duplicate List">
-      <!-- Use named regex group to grab pattern
-           <identifier_0>_<identifier_1>.fq. Here identifier_0 is the list
-           identifier in the nested collection and identifier_1 is either
-           forward or reverse (for instance samp1_forward.fq).
-      -->
         <data format="txt" name="output" metadata_source="reads"/>
-        <discover_datasets pattern="FlexbarOutput_(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" metadata_source="reads" visible="true" />
+        <collection name="list_output" type="list:paired" label="Duplicate List">
+              <!-- Use named regex group to grab pattern
+                   <identifier_0>_<identifier_1>.fq. Here identifier_0 is the list
+                   identifier in the nested collection and identifier_1 is either
+                   forward or reverse (for instance samp1_forward.fq).
+              -->
+            <discover_datasets pattern="FlexbarOutput_barcode_(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" metadata_source="reads" visible="false" />
         </collection>
     </outputs>
 
