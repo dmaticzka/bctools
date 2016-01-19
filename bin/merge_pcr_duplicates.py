@@ -56,16 +56,11 @@ parser.add_argument(
     help="Path to bed6 file containing alignments.")
 parser.add_argument(
     "bclib",
-    help="Path to fasta barcode library.")
+    help="Path to fastq barcode library.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
-parser.add_argument(
-    "--fasta-library",
-    dest="fasta_library",
-    action="store_true",
-    help="Read random barcode library as fasta format.")
 # misc arguments
 parser.add_argument(
     "-v", "--verbose",
@@ -98,10 +93,7 @@ logging.info("")
 
 # load barcode library into dictionary
 input_handle = open(args.bclib, "rU")
-if args.fasta_library:
-    input_seq_iterator = SeqIO.parse(input_handle, "fasta")
-else:
-    input_seq_iterator = SeqIO.parse(input_handle, "fastq")
+input_seq_iterator = SeqIO.parse(input_handle, "fastq")
 bcs = pd.DataFrame.from_records(
     data=fasta_tuple_generator(input_seq_iterator),
     columns=["read_id", "bc"])

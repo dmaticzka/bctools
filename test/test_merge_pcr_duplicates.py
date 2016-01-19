@@ -57,14 +57,13 @@ def test_call_extended_ids():
 def test_call_fileout_fastalib():
     "Call merge_pcr_duplicates.py with infile and outfile, use fasta random barcode library"
     infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict.fa"
+    inlib = "pcr_dupes_randomdict.fastq"
     outfile = "merged_pcr_dupes.bed"
     env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        "--fasta-library",
     )
     assert(cmp(
         testdir + outfile,
@@ -75,13 +74,12 @@ def test_call_fileout_fastalib():
 def test_call_stdout():
     "Call merge_pcr_duplicates.py with infile."
     infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict.fa"
+    inlib = "pcr_dupes_randomdict.fastq"
     outfile = "stdout_merged_pcr_dupes.bed"
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
-        "--fasta-library",
     )
     with open(testdir + outfile, "w") as b:
         b.write(run.stdout)
@@ -94,14 +92,13 @@ def test_call_stdout():
 def test_call_no_readids_in_common():
     "Call merge_pcr_duplicates.py with a library that includes none of the required ids."
     infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict_no_common_ids.fa"
+    inlib = "pcr_dupes_randomdict_no_common_ids.fastq"
     outfile = "should_not_be_crated.txt"
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        "--fasta-library",
         expect_error=True
     )
     assert(run.returncode == 1)
@@ -110,14 +107,13 @@ def test_call_no_readids_in_common():
 def test_call_barcodes_not_available_for_all_entries():
     "Call merge_pcr_duplicates.py with infile and outfile."
     infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict_missingsome.fa"
+    inlib = "pcr_dupes_randomdict_missingsome.fastq"
     outfile = "merged_pcr_dupes_incomplete.bed"
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        "--fasta-library",
         expect_stderr=True
     )
     assert(cmp(
@@ -130,14 +126,13 @@ def test_call_barcodes_not_available_for_all_entries():
 def test_call_barcodes_withN():
     "Call merge_pcr_duplicates.py with barcodes containing uncalled bases."
     infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict_withN.fa"
+    inlib = "pcr_dupes_randomdict_withN.fastq"
     outfile = "merged_pcr_dupes_withN.bed"
     env.run(
         bindir_rel + "merge_pcr_duplicates.py",
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        "--fasta-library",
     )
     assert(cmp(
         testdir + outfile,
