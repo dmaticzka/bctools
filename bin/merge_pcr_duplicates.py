@@ -97,31 +97,16 @@ syscall2 = "cat " + args.alignments + " | sort -k4,4 > t2"
 call(syscall2, shell=True)
 syscall = "join -1 1 -2 4 t1 t2 | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > t"
 call(syscall, shell=True)
+# TODO use temporary files
+# TODO use pipes
+# TODO remove shell?
 
-# # load barcode library into dictionary
-# input_handle = open(args.bclib, "rU")
-# input_seq_iterator = SeqIO.parse(input_handle, "fastq")
-# bcs = pd.DataFrame.from_records(
-#     data=fasta_tuple_generator(input_seq_iterator),
-#     columns=["read_id", "bc"])
-#
-# # load alignments
-# alns = pd.read_csv(
-#     args.alignments,
-#     sep="\t",
-#     names=["chrom", "start", "stop", "read_id", "score", "strand"])
-#
-# # keep id parts up to first whitespace
-# alns["read_id"] = alns["read_id"].str.split(' ').str.get(0)
-#
 # # combine barcode library and alignments
 # bcalib = pd.merge(
 #     bcs, alns,
 #     on="read_id",
 #     how="inner",
 #     sort=False)
-# if bcalib.empty:
-#     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
 # n_alns = len(alns.index)
 # n_bcalib = len(bcalib.index)
 # if n_bcalib < n_alns:
@@ -133,6 +118,9 @@ bcalib = pd.read_csv(
     "t",
     sep="\t",
     names=["chrom", "start", "stop", "bc", "score", "strand"])
+
+if bcalib.empty:
+    raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
 
 # remove entries with barcodes that has uncalled base N
 bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
