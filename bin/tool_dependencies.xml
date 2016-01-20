@@ -21,4 +21,7 @@
     <package name="flexbar" version="2.5">
         <repository name="package_flexbar_2_5" owner="rnateam"/>
     </package>
+    <package name="gnu_awk" version="4.1.0">
+        <repository name="package_gnu_awk_4_1_0" owner="iuc"/>
+    </package>
 </tool_dependency>
