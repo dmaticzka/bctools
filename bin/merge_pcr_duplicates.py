@@ -91,6 +91,14 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
 
+# see if alignments are empty and the tool can quit
+n_alns = sum(1 for line in open(args.alignments))
+if n_alns == 0:
+    logging.warning("Working on empty set of alignments, writing empty output.")
+    eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
+    eventalnout.close()
+    exit(0)
+
 syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > t1"
 call(syscall1, shell=True)
 syscall2 = "cat " + args.alignments + " | sort -k4,4 > t2"

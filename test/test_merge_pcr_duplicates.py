@@ -15,7 +15,7 @@ def test_call_without_parameters():
     "Call merge_pcr_duplicates.py withouth any additional parameters."
     run = env.run(
         bindir_rel + "merge_pcr_duplicates.py",
-        expect_error=True
+        expect_error=True,
     )
     assert(re.search("too few arguments", run.stderr))
 
@@ -99,7 +99,7 @@ def test_call_no_readids_in_common():
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        expect_error=True
+        expect_error=True,
     )
     assert(run.returncode == 1)
 
@@ -114,7 +114,7 @@ def test_call_barcodes_not_available_for_all_entries():
         datadir_rel + infile,
         datadir_rel + inlib,
         "--outfile", outfile,
-        expect_stderr=True
+        expect_stderr=True,
     )
     assert(cmp(
         testdir + outfile,
@@ -137,4 +137,22 @@ def test_call_barcodes_withN():
     assert(cmp(
         testdir + outfile,
         datadir + "merged_pcr_dupes_withN.bed"
+    ))
+
+
+def test_call_empty_barcode_library():
+    "Call merge_pcr_duplicates.py with empty barcode library."
+    infile = "empty_file"
+    inlib = "pcr_dupes_randomdict_withN.fastq"
+    outfile = "empty_output.bed"
+    env.run(
+        bindir_rel + "merge_pcr_duplicates.py",
+        datadir_rel + infile,
+        datadir_rel + inlib,
+        "--outfile", outfile,
+        expect_stderr=True,
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "empty_file"
     ))
