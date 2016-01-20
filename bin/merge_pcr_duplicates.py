@@ -31,9 +31,11 @@ Status: Testing
 import argparse
 import logging
 from sys import stdout
-# from Bio import SeqIO
 import pandas as pd
-from subprocess import call
+from subprocess import check_call
+from shutil import rmtree
+from tempfile import mkdtemp
+from os.path import isfile
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
@@ -99,22 +101,36 @@ if n_alns == 0:
     eventalnout.close()
     exit(0)
 
-syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > t1"
-call(syscall1, shell=True)
-syscall2 = "cat " + args.alignments + " |awk -F \"\\t\" 'BEGIN{OFS=\"\\t\"}{split($4, a, \" \"); $4 = a[1]; print}'| sort -k4,4 > t2"
-call(syscall2, shell=True)
-syscall = "join -1 1 -2 4 t1 t2 | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > t"
-call(syscall, shell=True)
-# TODO use temporary files
-# TODO use pipes
-# TODO remove shell?
+# check input filenames
+if not isfile(args.bclib):
+    raise Exception("ERROR: barcode library '{}' not found.")
+if not isfile(args.alignments):
+    raise Exception("ERROR: alignments '{}' not found.")
 
+try:
+    tmpdir = mkdtemp()
+    logging.debug("tmpdir: " + tmpdir)
 
-# get alignments combined with barcodes
-bcalib = pd.read_csv(
-    "t",
-    sep="\t",
-    names=["chrom", "start", "stop", "bc", "score", "strand"])
+    # prepare barcode library
+    syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > " + tmpdir + "/bclib.csv"
+    check_call(syscall1, shell=True)
+
+    # prepare alinments
+    syscall2 = "cat " + args.alignments + " | awk -F \"\\t\" 'BEGIN{OFS=\"\\t\"}{split($4, a, \" \"); $4 = a[1]; print}'| sort -k4,4 > " + tmpdir + "/alns.csv"
+    check_call(syscall2, shell=True)
+
+    # join barcode library and alignments
+    syscall3 = "join -1 1 -2 4 " + tmpdir + "/bclib.csv " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > " + tmpdir + "/bcalib.csv"
+    check_call(syscall3, shell=True)
+
+    # get alignments combined with barcodes
+    bcalib = pd.read_csv(
+        tmpdir + "/bcalib.csv",
+        sep="\t",
+        names=["chrom", "start", "stop", "bc", "score", "strand"])
+finally:
+    logging.debug("removed tmpdir: " + tmpdir)
+    rmtree(tmpdir)
 
 # fail if alignments given but combined library is empty
 if bcalib.empty:
