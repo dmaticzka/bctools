@@ -8,7 +8,7 @@
   <requirements>
       <requirement type="package" version="4.1.0">gnu_awk</requirement>
   </requirements>
-  <version_command>python merge_pcr_duplicates.py --version</version_command>
+  <version_command>python $__tool_directory__/merge_pcr_duplicates.py --version</version_command>
   <command interpreter="python"><![CDATA[merge_pcr_duplicates.py
 #if $positional_1 and $positional_1 is not None:
 $positional_1
