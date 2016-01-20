@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+import pandas as pd
+from subprocess import check_call
+from shutil import rmtree
+from tempfile import mkdtemp
+from os.path import isfile
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
+
 tool_description = """
 Merge PCR duplicates according to random barcode library.
 
@@ -28,24 +41,6 @@ Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
 
-import argparse
-import logging
-from sys import stdout
-from Bio import SeqIO
-import pandas as pd
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
-
-
-def fasta_tuple_generator(fasta_iterator):
-    "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
-    for record in input_seq_iterator:
-        yield (record.id, str(record.seq))
-
-
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
                                  epilog=epilog,
@@ -56,16 +51,11 @@ parser.add_argument(
     help="Path to bed6 file containing alignments.")
 parser.add_argument(
     "bclib",
-    help="Path to fasta barcode library.")
+    help="Path to fastq barcode library.")
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
-parser.add_argument(
-    "--fasta-library",
-    dest="fasta_library",
-    action="store_true",
-    help="Read random barcode library as fasta format.")
 # misc arguments
 parser.add_argument(
     "-v", "--verbose",
@@ -78,7 +68,7 @@ parser.add_argument(
 parser.add_argument(
     '--version',
     action='version',
-    version='0.1.0')
+    version='0.2.0')
 
 args = parser.parse_args()
 
@@ -96,50 +86,65 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
 
-# load barcode library into dictionary
-input_handle = open(args.bclib, "rU")
-if args.fasta_library:
-    input_seq_iterator = SeqIO.parse(input_handle, "fasta")
-else:
-    input_seq_iterator = SeqIO.parse(input_handle, "fastq")
-bcs = pd.DataFrame.from_records(
-    data=fasta_tuple_generator(input_seq_iterator),
-    columns=["read_id", "bc"])
+# see if alignments are empty and the tool can quit
+n_alns = sum(1 for line in open(args.alignments))
+if n_alns == 0:
+    logging.warning("WARNING: Working on empty set of alignments, writing empty output.")
+    eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
+    eventalnout.close()
+    exit(0)
 
-# load alignments
-alns = pd.read_csv(
-    args.alignments,
-    sep="\t",
-    names=["chrom", "start", "stop", "read_id", "score", "strand"])
+# check input filenames
+if not isfile(args.bclib):
+    raise Exception("ERROR: barcode library '{}' not found.")
+if not isfile(args.alignments):
+    raise Exception("ERROR: alignments '{}' not found.")
 
-# keep id parts up to first whitespace
-alns["read_id"] = alns["read_id"].str.split(' ').str.get(0)
+try:
+    tmpdir = mkdtemp()
+    logging.debug("tmpdir: " + tmpdir)
 
-# combine barcode library and alignments
-bcalib = pd.merge(
-    bcs, alns,
-    on="read_id",
-    how="inner",
-    sort=False)
+    # prepare barcode library
+    syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > " + tmpdir + "/bclib.csv"
+    check_call(syscall1, shell=True)
+
+    # prepare alinments
+    syscall2 = "cat " + args.alignments + " | awk -F \"\\t\" 'BEGIN{OFS=\"\\t\"}{split($4, a, \" \"); $4 = a[1]; print}'| sort -k4,4 > " + tmpdir + "/alns.csv"
+    check_call(syscall2, shell=True)
+
+    # join barcode library and alignments
+    syscall3 = "join -1 1 -2 4 " + tmpdir + "/bclib.csv " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > " + tmpdir + "/bcalib.csv"
+    check_call(syscall3, shell=True)
+
+    # get alignments combined with barcodes
+    bcalib = pd.read_csv(
+        tmpdir + "/bcalib.csv",
+        sep="\t",
+        names=["chrom", "start", "stop", "bc", "score", "strand"])
+finally:
+    logging.debug("removed tmpdir: " + tmpdir)
+    rmtree(tmpdir)
+
+# fail if alignments given but combined library is empty
 if bcalib.empty:
     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
-n_alns = len(alns.index)
+
+# warn if not all alignments could be assigned a barcode
 n_bcalib = len(bcalib.index)
 if n_bcalib < n_alns:
     logging.warning(
-        "{} of {} alignments could not be associated with a random barcode.".format(
-            n_alns - n_bcalib, n_alns))
+        "{} of {} alignments could not be associated with a random barcode.".format(n_alns - n_bcalib, n_alns))
 
 # remove entries with barcodes that has uncalled base N
 bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
 n_bcalib_cleaned = len(bcalib_cleaned)
-if n_bcalib_cleaned < n_bcalib:
-    msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
-        n_bcalib - n_bcalib_cleaned, n_bcalib)
-    if n_bcalib_cleaned < (0.8 * n_bcalib):
-        logging.warning(msg)
-    else:
-        logging.info(msg)
+# if n_bcalib_cleaned < n_bcalib:
+#     msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
+#         n_bcalib - n_bcalib_cleaned, n_bcalib)
+#     if n_bcalib_cleaned < (0.8 * n_bcalib):
+#         logging.warning(msg)
+#     else:
+#         logging.info(msg)
 
 # count and merge pcr duplicates
 # grouping sorts by keys, so the ouput will be properly sorted

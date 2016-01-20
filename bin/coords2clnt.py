@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+from pybedtools import BedTool
+from pybedtools.featurefuncs import five_prime
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
+
 tool_description = """
 Given coordinates of the aligned reads, calculate positions of the crosslinked
 nucleotides. Crosslinked nts are assumed to be one nt upstream of the 5'-end of
@@ -24,16 +34,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from sys import stdout
-from pybedtools import BedTool
-from pybedtools.featurefuncs import five_prime
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,

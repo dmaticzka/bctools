@@ -9,13 +9,22 @@
     <package name="pandas" version="0.16">
         <repository name="package_python_2_7_pandas_0_16" owner="iuc"/>
     </package>
-    <package name="pybedtools" version="0.7.4">
+    <!-- <package name="pybedtools" version="0.7.4">
         <repository name="package_python_2_7_pybedtools_0_7_4" owner="iuc"/>
+    </package> -->
+    <package name="pybedtools" version="0.6.9">
+        <repository name="package_python_2_7_pybedtools_0_6_9" owner="iuc"/>
     </package>
     <package name="pysam" version="0.8.3">
         <repository name="package_python_2_7_pysam_0_8_3" owner="iuc"/>
     </package>
     <package name="flexbar" version="2.5">
         <repository name="package_flexbar_2_5" owner="rnateam"/>
+    </package>
+    <package name="gnu_awk" version="4.1.0">
+        <repository name="package_gnu_awk_4_1_0" owner="iuc"/>
+    </package>
+    <package name="gnu_coreutils" version="8.22">
+        <repository name="package_gnu_coreutils_8_22" owner="iuc"/>
     </package>
 </tool_dependency>

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from string import maketrans
+from sys import stdout
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.Alphabet import IUPAC
+
 tool_description = """
 Convert standard nucleotides to IUPAC nucleotide codes used for binary barcodes.
 
@@ -18,19 +26,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from string import maketrans
-from sys import stdout
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
-
-# # avoid ugly python IOError when stdout output is piped into another program
-# # and then truncated (such as piping to head)
-# from signal import signal, SIGPIPE, SIG_DFL
-# signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,

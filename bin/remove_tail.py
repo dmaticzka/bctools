@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+from Bio.SeqIO.QualityIO import FastqGeneralIterator
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
+
 tool_description = """
 Remove a certain number of nucleotides from the 3'-tails of sequences in fastq
 format.
@@ -17,16 +26,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from sys import stdout
-from Bio.SeqIO.QualityIO import FastqGeneralIterator
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
