@@ -31,8 +31,9 @@ Status: Testing
 import argparse
 import logging
 from sys import stdout
-from Bio import SeqIO
+# from Bio import SeqIO
 import pandas as pd
+from subprocess import call
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
@@ -40,11 +41,10 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 
-def fasta_tuple_generator(fasta_iterator):
-    "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
-    for record in input_seq_iterator:
-        yield (record.id, str(record.seq))
-
+# def fasta_tuple_generator(fasta_iterator):
+#     "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
+#     for record in input_seq_iterator:
+#         yield (record.id, str(record.seq))
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
@@ -91,47 +91,59 @@ if args.outfile:
     logging.info("  outfile: '{}'".format(args.outfile))
 logging.info("")
 
-# load barcode library into dictionary
-input_handle = open(args.bclib, "rU")
-input_seq_iterator = SeqIO.parse(input_handle, "fastq")
-bcs = pd.DataFrame.from_records(
-    data=fasta_tuple_generator(input_seq_iterator),
-    columns=["read_id", "bc"])
+syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > t1"
+call(syscall1, shell=True)
+syscall2 = "cat " + args.alignments + " | sort -k4,4 > t2"
+call(syscall2, shell=True)
+syscall = "join -1 1 -2 4 t1 t2 | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > t"
+call(syscall, shell=True)
 
-# load alignments
-alns = pd.read_csv(
-    args.alignments,
+# # load barcode library into dictionary
+# input_handle = open(args.bclib, "rU")
+# input_seq_iterator = SeqIO.parse(input_handle, "fastq")
+# bcs = pd.DataFrame.from_records(
+#     data=fasta_tuple_generator(input_seq_iterator),
+#     columns=["read_id", "bc"])
+#
+# # load alignments
+# alns = pd.read_csv(
+#     args.alignments,
+#     sep="\t",
+#     names=["chrom", "start", "stop", "read_id", "score", "strand"])
+#
+# # keep id parts up to first whitespace
+# alns["read_id"] = alns["read_id"].str.split(' ').str.get(0)
+#
+# # combine barcode library and alignments
+# bcalib = pd.merge(
+#     bcs, alns,
+#     on="read_id",
+#     how="inner",
+#     sort=False)
+# if bcalib.empty:
+#     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
+# n_alns = len(alns.index)
+# n_bcalib = len(bcalib.index)
+# if n_bcalib < n_alns:
+#     logging.warning(
+#         "{} of {} alignments could not be associated with a random barcode.".format(
+#             n_alns - n_bcalib, n_alns))
+
+bcalib = pd.read_csv(
+    "t",
     sep="\t",
-    names=["chrom", "start", "stop", "read_id", "score", "strand"])
-
-# keep id parts up to first whitespace
-alns["read_id"] = alns["read_id"].str.split(' ').str.get(0)
-
-# combine barcode library and alignments
-bcalib = pd.merge(
-    bcs, alns,
-    on="read_id",
-    how="inner",
-    sort=False)
-if bcalib.empty:
-    raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
-n_alns = len(alns.index)
-n_bcalib = len(bcalib.index)
-if n_bcalib < n_alns:
-    logging.warning(
-        "{} of {} alignments could not be associated with a random barcode.".format(
-            n_alns - n_bcalib, n_alns))
+    names=["chrom", "start", "stop", "bc", "score", "strand"])
 
 # remove entries with barcodes that has uncalled base N
 bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
 n_bcalib_cleaned = len(bcalib_cleaned)
-if n_bcalib_cleaned < n_bcalib:
-    msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
-        n_bcalib - n_bcalib_cleaned, n_bcalib)
-    if n_bcalib_cleaned < (0.8 * n_bcalib):
-        logging.warning(msg)
-    else:
-        logging.info(msg)
+# if n_bcalib_cleaned < n_bcalib:
+#     msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
+#         n_bcalib - n_bcalib_cleaned, n_bcalib)
+#     if n_bcalib_cleaned < (0.8 * n_bcalib):
+#         logging.warning(msg)
+#     else:
+#         logging.info(msg)
 
 # count and merge pcr duplicates
 # grouping sorts by keys, so the ouput will be properly sorted
