@@ -101,7 +101,7 @@ if n_alns == 0:
 
 syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > t1"
 call(syscall1, shell=True)
-syscall2 = "cat " + args.alignments + " | sort -k4,4 > t2"
+syscall2 = "cat " + args.alignments + " |awk -F \"\\t\" 'BEGIN{OFS=\"\\t\"}{split($4, a, \" \"); $4 = a[1]; print}'| sort -k4,4 > t2"
 call(syscall2, shell=True)
 syscall = "join -1 1 -2 4 t1 t2 | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > t"
 call(syscall, shell=True)

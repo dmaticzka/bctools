@@ -38,7 +38,7 @@ def test_call_fileout():
 
 
 def test_call_extended_ids():
-    "Call merge_pcr_duplicates.py with infile and outfile."
+    "Call merge_pcr_duplicates.py with extended ids for both alignments and barcode dictionary."
     infile = "pcr_dupes_sorted_2_extended_ids.bed"
     inlib = "pcr_dupes_randomdict_extended_ids.fastq"
     outfile = "merged_pcr_dupes_extended_ids.bed"
@@ -48,10 +48,11 @@ def test_call_extended_ids():
         datadir_rel + inlib,
         "--outfile", outfile,
     )
-    assert(cmp(
+    assert cmp(
         testdir + outfile,
         datadir + "merged_pcr_dupes.bed"
-    ))
+    ), "files {} and {} did not match".format(testdir + outfile,
+                                              datadir + "merged_pcr_dupes.bed")
 
 
 def test_call_fileout_fastalib():
