@@ -94,7 +94,7 @@ logging.info("")
 # see if alignments are empty and the tool can quit
 n_alns = sum(1 for line in open(args.alignments))
 if n_alns == 0:
-    logging.warning("Working on empty set of alignments, writing empty output.")
+    logging.warning("WARNING: Working on empty set of alignments, writing empty output.")
     eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
     eventalnout.close()
     exit(0)
@@ -109,26 +109,22 @@ call(syscall, shell=True)
 # TODO use pipes
 # TODO remove shell?
 
-# # combine barcode library and alignments
-# bcalib = pd.merge(
-#     bcs, alns,
-#     on="read_id",
-#     how="inner",
-#     sort=False)
-# n_alns = len(alns.index)
-# n_bcalib = len(bcalib.index)
-# if n_bcalib < n_alns:
-#     logging.warning(
-#         "{} of {} alignments could not be associated with a random barcode.".format(
-#             n_alns - n_bcalib, n_alns))
 
+# get alignments combined with barcodes
 bcalib = pd.read_csv(
     "t",
     sep="\t",
     names=["chrom", "start", "stop", "bc", "score", "strand"])
 
+# fail if alignments given but combined library is empty
 if bcalib.empty:
     raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
+
+# warn if not all alignments could be assigned a barcode
+n_bcalib = len(bcalib.index)
+if n_bcalib < n_alns:
+    logging.warning(
+        "{} of {} alignments could not be associated with a random barcode.".format(n_alns - n_bcalib, n_alns))
 
 # remove entries with barcodes that has uncalled base N
 bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
