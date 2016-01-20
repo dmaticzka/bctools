@@ -7,6 +7,7 @@
   <expand macro="stdio" />
   <requirements>
       <requirement type="package" version="4.1.0">gnu_awk</requirement>
+      <requirement type="package" version="8.22">gnu_coreutils</requirement>
   </requirements>
   <version_command>python $__tool_directory__/merge_pcr_duplicates.py --version</version_command>
   <command interpreter="python"><![CDATA[merge_pcr_duplicates.py
