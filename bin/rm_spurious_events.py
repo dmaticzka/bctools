@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+import pandas as pd
+
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
 
@@ -29,11 +34,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from sys import stdout
-import pandas as pd
 
 
 class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,

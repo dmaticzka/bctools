@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+import re
+from sys import stdout
+from Bio.SeqIO.QualityIO import FastqGeneralIterator
+
 tool_description = """
 Exract barcodes from a FASTQ file according to a user-specified pattern.
 
@@ -18,12 +24,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-import re
-from sys import stdout
-from Bio.SeqIO.QualityIO import FastqGeneralIterator
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+from shutil import rmtree
+from tempfile import mkdtemp
+from pybedtools import BedTool
+import pysam
+
 tool_description = """
 Extract alignment ends from sam file.
 
@@ -31,14 +39,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Development
 """
-
-import argparse
-import logging
-from sys import stdout
-from shutil import rmtree
-from tempfile import mkdtemp
-from pybedtools import BedTool
-import pysam
 
 
 class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,

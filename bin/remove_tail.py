@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+from Bio.SeqIO.QualityIO import FastqGeneralIterator
+
 tool_description = """
 Remove a certain number of nucleotides from the 3'-tails of sequences in fastq
 format.
@@ -17,11 +22,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from sys import stdout
-from Bio.SeqIO.QualityIO import FastqGeneralIterator
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)

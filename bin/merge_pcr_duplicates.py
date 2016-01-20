@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+import argparse
+import logging
+from sys import stdout
+import pandas as pd
+from subprocess import check_call
+from shutil import rmtree
+from tempfile import mkdtemp
+from os.path import isfile
+
 tool_description = """
 Merge PCR duplicates according to random barcode library.
 
@@ -27,15 +36,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-import argparse
-import logging
-from sys import stdout
-import pandas as pd
-from subprocess import check_call
-from shutil import rmtree
-from tempfile import mkdtemp
-from os.path import isfile
 
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
