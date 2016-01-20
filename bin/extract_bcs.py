@@ -5,6 +5,10 @@ import logging
 import re
 from sys import stdout
 from Bio.SeqIO.QualityIO import FastqGeneralIterator
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Exract barcodes from a FASTQ file according to a user-specified pattern.
@@ -24,11 +28,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,

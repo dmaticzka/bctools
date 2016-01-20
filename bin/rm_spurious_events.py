@@ -4,6 +4,10 @@ import argparse
 import logging
 from sys import stdout
 import pandas as pd
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
@@ -40,11 +44,6 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
                                           argparse.RawDescriptionHelpFormatter):
     # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
     pass
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,

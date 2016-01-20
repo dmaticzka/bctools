@@ -8,6 +8,10 @@ from subprocess import check_call
 from shutil import rmtree
 from tempfile import mkdtemp
 from os.path import isfile
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Merge PCR duplicates according to random barcode library.
@@ -36,17 +40,6 @@ License: Apache
 Email: maticzkd@informatik.uni-freiburg.de
 Status: Testing
 """
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
-
-
-# def fasta_tuple_generator(fasta_iterator):
-#     "Yields id, sequence tuples given an iterator over Biopython SeqIO objects."
-#     for record in input_seq_iterator:
-#         yield (record.id, str(record.seq))
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,

@@ -7,6 +7,10 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from pybedtools import BedTool
 import pysam
+# avoid ugly python IOError when stdout output is piped into another program
+# and then truncated (such as piping to head)
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Extract alignment ends from sam file.
@@ -45,11 +49,6 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
                                           argparse.RawDescriptionHelpFormatter):
     # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
     pass
-
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
