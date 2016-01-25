@@ -46,6 +46,7 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     pass
 
 
+# @profile
 def main():
     # parse command line arguments
     parser = argparse.ArgumentParser(description=tool_description,
@@ -100,6 +101,7 @@ def main():
         raise ValueError("Threshold must be in [0,1].")
 
     # load alignments
+    logging.debug("reading csv")
     alns = pd.read_csv(
         args.events,
         sep="\t",
@@ -107,10 +109,19 @@ def main():
 
     # remove all alignments that not enough PCR duplicates with respect to
     # the group maximum
+    logging.debug("grouping")
     grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
-    alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
+    logging.debug("cleaning")
+
+    def threshold_group(g):
+        group_max = g["score"].max()
+        group_threshold = args.threshold * group_max
+        return g[g["score"] >= group_threshold]
+
+    alns_cleaned = grouped.apply(threshold_group)
 
     # write coordinates of crosslinking event alignments
+    logging.debug("write out")
     alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
     alns_cleaned.to_csv(
         alns_cleaned_out,
