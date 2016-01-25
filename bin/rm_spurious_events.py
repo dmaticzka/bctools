@@ -46,7 +46,7 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     pass
 
 
-# @profile
+@profile
 def main():
     # parse command line arguments
     parser = argparse.ArgumentParser(description=tool_description,
@@ -100,12 +100,23 @@ def main():
     if args.threshold < 0 or args.threshold > 1:
         raise ValueError("Threshold must be in [0,1].")
 
-    # load alignments
-    logging.debug("reading csv")
-    alns = pd.read_csv(
-        args.events,
-        sep="\t",
-        names=["chrom", "start", "stop", "read_id", "score", "strand"])
+    def load_alns(fname):
+        # load alignments
+        logging.debug("reading csv")
+        alns = pd.read_csv(
+            fname,
+            sep="\t",
+            names=["chrom", "start", "stop", "read_id", "score", "strand"])
+        logging.debug("setting chromosome as category")
+        logging.debug(str(alns.dtypes))
+        alns["chrom"] = alns["chrom"].astype("category")
+        alns["strand"] = alns["strand"].astype("category")
+        alns["read_id"] = alns["read_id"].astype("category")
+        logging.debug(str(alns.dtypes))
+
+        return alns
+
+    alns = load_alns(args.events)
 
     # remove all alignments that not enough PCR duplicates with respect to
     # the group maximum
