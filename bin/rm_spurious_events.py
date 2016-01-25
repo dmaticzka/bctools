@@ -2,12 +2,8 @@
 
 import argparse
 import logging
-from sys import stdout
-import pandas as pd
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
+from subprocess import check_call
+import os
 
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
@@ -15,8 +11,6 @@ Remove spurious events originating from errors in random sequence tags.
 This script compares all events sharing the same coordinates. Among each group
 of events the maximum number of PCR duplicates is determined. All events that
 are supported by less than 10 percent of this maximum count are removed.
-
-By default output is written to stdout.
 
 Input:
 * bed6 file containing crosslinking events with score field set to number of PCR
@@ -28,7 +22,7 @@ Output:
 
 Example usage:
 - remove spurious events from spurious.bed and write results to file cleaned.bed
-rm_spurious_events.py spurious.bed --out cleaned.bed
+rm_spurious_events.py spurious.bed --oufile cleaned.bed
 """
 
 epilog = """
@@ -45,73 +39,68 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
     pass
 
-# parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
-                                 formatter_class=DefaultsRawDescriptionHelpFormatter)
-# positional arguments
-parser.add_argument(
-    "events",
-    help="Path to bed6 file containing alignments.")
-# optional arguments
-parser.add_argument(
-    "-o", "--outfile",
-    help="Write results to this file.")
-parser.add_argument(
-    "-t", "--threshold",
-    type=float,
-    default=0.1,
-    help="Threshold for spurious event removal."
-)
-# misc arguments
-parser.add_argument(
-    "-v", "--verbose",
-    help="Be verbose.",
-    action="store_true")
-parser.add_argument(
-    "-d", "--debug",
-    help="Print lots of debugging information",
-    action="store_true")
-parser.add_argument(
-    '--version',
-    action='version',
-    version='0.1.0')
 
-args = parser.parse_args()
+def main():
+    # parse command line arguments
+    parser = argparse.ArgumentParser(description=tool_description,
+                                     epilog=epilog,
+                                     formatter_class=DefaultsRawDescriptionHelpFormatter)
+    # positional arguments
+    parser.add_argument(
+        "events",
+        help="Path to bed6 file containing alignments.")
+    # optional arguments
+    parser.add_argument(
+        "-o", "--outfile",
+        required=True,
+        help="Write results to this file.")
+    parser.add_argument(
+        "-t", "--threshold",
+        type=float,
+        default=0.1,
+        help="Threshold for spurious event removal."
+    )
+    # misc arguments
+    parser.add_argument(
+        "-v", "--verbose",
+        help="Be verbose.",
+        action="store_true")
+    parser.add_argument(
+        "-d", "--debug",
+        help="Print lots of debugging information",
+        action="store_true")
+    parser.add_argument(
+        '--version',
+        action='version',
+        version='0.1.0')
 
-if args.debug:
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
-elif args.verbose:
-    logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
-else:
-    logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
-logging.info("Parsed arguments:")
-logging.info("  alignments: '{}'".format(args.events))
-logging.info("  threshold: '{}'".format(args.threshold))
-if args.outfile:
-    logging.info("  outfile: enabled writing to file")
-    logging.info("  outfile: '{}'".format(args.outfile))
-logging.info("")
+    args = parser.parse_args()
 
-# check threshold parameter value
-if args.threshold < 0 or args.threshold > 1:
-    raise ValueError("Threshold must be in [0,1].")
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
+    elif args.verbose:
+        logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
+    else:
+        logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
+    logging.info("Parsed arguments:")
+    logging.info("  alignments: '{}'".format(args.events))
+    logging.info("  threshold: '{}'".format(args.threshold))
+    if args.outfile:
+        logging.info("  outfile: enabled writing to file")
+        logging.info("  outfile: '{}'".format(args.outfile))
+    logging.info("")
 
-# load alignments
-alns = pd.read_csv(
-    args.events,
-    sep="\t",
-    names=["chrom", "start", "stop", "read_id", "score", "strand"])
+    # check threshold parameter value
+    if args.threshold < 0 or args.threshold > 1:
+        raise ValueError("Threshold must be in [0,1].")
 
-# remove all alignments that not enough PCR duplicates with respect to
-# the group maximum
-grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
-alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
+    if not os.path.isfile(args.events):
+        raise Exception("ERROR: file '{}' not found.")
 
-# write coordinates of crosslinking event alignments
-alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
-alns_cleaned.to_csv(
-    alns_cleaned_out,
-    columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
-    sep="\t", index=False, header=False)
-alns_cleaned_out.close()
+    # prepare barcode library
+    syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl " + os.path.dirname(os.path.realpath(__file__)) + "/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
+    check_call(syscall, shell=True)
+
+
+if __name__ == "__main__":
+    main()
