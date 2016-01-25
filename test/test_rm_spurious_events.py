@@ -68,7 +68,7 @@ def test_call_fileout_threshold_50p():
 
 
 def test_call_not_sorted():
-    "Call rm_spurious_events.py with bed entries that are not sored and outfile."
+    "Call rm_spurious_events.py with bed entries that are not sorted and outfile."
     infile = "merged_pcr_dupes_spurious_notsorted.bed"
     outfile = "merged_pcr_dupes_spurious_filtered2.bed"
     env.run(
