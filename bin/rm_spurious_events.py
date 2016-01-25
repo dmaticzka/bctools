@@ -3,7 +3,10 @@
 import argparse
 import logging
 from sys import stdout
-import pandas as pd
+from subprocess import check_call
+from shutil import rmtree
+from tempfile import mkdtemp
+from os.path import isfile
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
 from signal import signal, SIGPIPE, SIG_DFL
@@ -46,7 +49,6 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     pass
 
 
-@profile
 def main():
     # parse command line arguments
     parser = argparse.ArgumentParser(description=tool_description,
@@ -100,45 +102,57 @@ def main():
     if args.threshold < 0 or args.threshold > 1:
         raise ValueError("Threshold must be in [0,1].")
 
-    def load_alns(fname):
-        # load alignments
-        logging.debug("reading csv")
-        alns = pd.read_csv(
-            fname,
-            sep="\t",
-            names=["chrom", "start", "stop", "read_id", "score", "strand"])
-        logging.debug("setting chromosome as category")
-        logging.debug(str(alns.dtypes))
-        # alns["chrom"] = alns["chrom"].astype("category")
-        # alns["strand"] = alns["strand"].astype("category")
-        # alns["read_id"] = alns["read_id"].astype("category")
-        logging.debug(str(alns.dtypes))
+    try:
+        tmpdir = mkdtemp()
+        logging.debug("tmpdir: " + tmpdir)
 
-        return alns
+        # prepare barcode library
+        # syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > " + tmpdir + "/bclib.csv"
+        syscall = "cat " + args.events + " | sort -k1,1 -k6,6 -k2,2n -k3,3 -k5,5nr | perl /home/maticzkd/co/bctools/bin/rm_spurious_events.pl | bedtools sort > " + args.outfile
+        check_call(syscall, shell=True)
+    finally:
+        logging.debug("removed tmpdir: " + tmpdir)
+        rmtree(tmpdir)
 
-    alns = load_alns(args.events)
-
-    # remove all alignments that not enough PCR duplicates with respect to
-    # the group maximum
-    logging.debug("grouping")
-    grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
-    logging.debug("cleaning")
-
-    def threshold_group(g):
-        group_max = max(g["score"].values)
-        group_threshold = args.threshold * group_max
-        return g[g["score"] >= group_threshold]
-
-    alns_cleaned = grouped.apply(threshold_group)
-
-    # write coordinates of crosslinking event alignments
-    logging.debug("write out")
-    alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
-    alns_cleaned.to_csv(
-        alns_cleaned_out,
-        columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
-        sep="\t", index=False, header=False)
-    alns_cleaned_out.close()
+    # def load_alns(fname):
+    #     # load alignments
+    #     logging.debug("reading csv")
+    #     alns = pd.read_csv(
+    #         fname,
+    #         sep="\t",
+    #         names=["chrom", "start", "stop", "read_id", "score", "strand"])
+    #     logging.debug("setting chromosome as category")
+    #     logging.debug(str(alns.dtypes))
+    #     # alns["chrom"] = alns["chrom"].astype("category")
+    #     # alns["strand"] = alns["strand"].astype("category")
+    #     # alns["read_id"] = alns["read_id"].astype("category")
+    #     logging.debug(str(alns.dtypes))
+    #
+    #     return alns
+    #
+    # alns = load_alns(args.events)
+    #
+    # # remove all alignments that not enough PCR duplicates with respect to
+    # # the group maximum
+    # logging.debug("grouping")
+    # grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
+    # logging.debug("cleaning")
+    #
+    # def threshold_group(g):
+    #     group_max = max(g["score"].values)
+    #     group_threshold = args.threshold * group_max
+    #     return g[g["score"] >= group_threshold]
+    #
+    # alns_cleaned = grouped.apply(threshold_group)
+    #
+    # # write coordinates of crosslinking event alignments
+    # logging.debug("write out")
+    # alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
+    # alns_cleaned.to_csv(
+    #     alns_cleaned_out,
+    #     columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
+    #     sep="\t", index=False, header=False)
+    # alns_cleaned_out.close()
 
 if __name__ == "__main__":
     main()
