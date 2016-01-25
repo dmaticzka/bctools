@@ -2,12 +2,8 @@
 
 import argparse
 import logging
-from sys import stdout
 from subprocess import check_call
-from shutil import rmtree
-from tempfile import mkdtemp
 import os
-from os.path import isfile
 
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
@@ -98,56 +94,13 @@ def main():
     if args.threshold < 0 or args.threshold > 1:
         raise ValueError("Threshold must be in [0,1].")
 
-    try:
-        tmpdir = mkdtemp()
-        logging.debug("tmpdir: " + tmpdir)
+    if not os.path.isfile(args.events):
+        raise Exception("ERROR: file '{}' not found.")
 
-        # prepare barcode library
-        syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl " + os.path.dirname(os.path.realpath(__file__)) + "/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
-        check_call(syscall, shell=True)
-    finally:
-        logging.debug("removed tmpdir: " + tmpdir)
-        rmtree(tmpdir)
+    # prepare barcode library
+    syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl " + os.path.dirname(os.path.realpath(__file__)) + "/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
+    check_call(syscall, shell=True)
 
-    # def load_alns(fname):
-    #     # load alignments
-    #     logging.debug("reading csv")
-    #     alns = pd.read_csv(
-    #         fname,
-    #         sep="\t",
-    #         names=["chrom", "start", "stop", "read_id", "score", "strand"])
-    #     logging.debug("setting chromosome as category")
-    #     logging.debug(str(alns.dtypes))
-    #     # alns["chrom"] = alns["chrom"].astype("category")
-    #     # alns["strand"] = alns["strand"].astype("category")
-    #     # alns["read_id"] = alns["read_id"].astype("category")
-    #     logging.debug(str(alns.dtypes))
-    #
-    #     return alns
-    #
-    # alns = load_alns(args.events)
-    #
-    # # remove all alignments that not enough PCR duplicates with respect to
-    # # the group maximum
-    # logging.debug("grouping")
-    # grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
-    # logging.debug("cleaning")
-    #
-    # def threshold_group(g):
-    #     group_max = max(g["score"].values)
-    #     group_threshold = args.threshold * group_max
-    #     return g[g["score"] >= group_threshold]
-    #
-    # alns_cleaned = grouped.apply(threshold_group)
-    #
-    # # write coordinates of crosslinking event alignments
-    # logging.debug("write out")
-    # alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
-    # alns_cleaned.to_csv(
-    #     alns_cleaned_out,
-    #     columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
-    #     sep="\t", index=False, header=False)
-    # alns_cleaned_out.close()
 
 if __name__ == "__main__":
     main()
