@@ -20,6 +20,8 @@ for all crosslinking sites sharing start and stop coordinates, the maximum numbe
 of squashed reads is determined.
 alignments having less than frac_max * max reads are discarded
 
+assumes bed entries to be sorted chr,strand,start,stop,score with score descending
+
 Options:
 
     --frac_max  filter out alignments supported by less reads than this fraction of the maximum number of reads per position
@@ -57,7 +59,8 @@ my $current_max = -1;
 my $current_threshold = -1;
 
 while (<>) {
-    my ($count, undef, $start, $chr, $strand, $stop) = split("\t");
+    my ($chr, $start, $stop, $id, $count, $strand) = split("\t");
+    # my ($count, undef, $start, $chr, $strand, $stop) = split("\t");
 
     if ($current_start != $start or
         $current_stop != $stop or
@@ -75,7 +78,7 @@ while (<>) {
         $current_threshold = $count*$frac_max;
         print $_;
         $debug and say "new threshold ${current_threshold} @ $chr $start $stop $strand $count";
-    } elsif ($count > $current_threshold) {
+    } elsif ($count >= $current_threshold) {
         # if it is not the first occourence, evaluate threshold and print if valid
         print $_;
     } else {
