@@ -109,9 +109,9 @@ def main():
             names=["chrom", "start", "stop", "read_id", "score", "strand"])
         logging.debug("setting chromosome as category")
         logging.debug(str(alns.dtypes))
-        alns["chrom"] = alns["chrom"].astype("category")
-        alns["strand"] = alns["strand"].astype("category")
-        alns["read_id"] = alns["read_id"].astype("category")
+        # alns["chrom"] = alns["chrom"].astype("category")
+        # alns["strand"] = alns["strand"].astype("category")
+        # alns["read_id"] = alns["read_id"].astype("category")
         logging.debug(str(alns.dtypes))
 
         return alns
@@ -125,7 +125,7 @@ def main():
     logging.debug("cleaning")
 
     def threshold_group(g):
-        group_max = g["score"].max()
+        group_max = max(g["score"].values)
         group_threshold = args.threshold * group_max
         return g[g["score"] >= group_threshold]
 
