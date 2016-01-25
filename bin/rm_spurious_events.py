@@ -45,73 +45,78 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
     pass
 
-# parse command line arguments
-parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
-                                 formatter_class=DefaultsRawDescriptionHelpFormatter)
-# positional arguments
-parser.add_argument(
-    "events",
-    help="Path to bed6 file containing alignments.")
-# optional arguments
-parser.add_argument(
-    "-o", "--outfile",
-    help="Write results to this file.")
-parser.add_argument(
-    "-t", "--threshold",
-    type=float,
-    default=0.1,
-    help="Threshold for spurious event removal."
-)
-# misc arguments
-parser.add_argument(
-    "-v", "--verbose",
-    help="Be verbose.",
-    action="store_true")
-parser.add_argument(
-    "-d", "--debug",
-    help="Print lots of debugging information",
-    action="store_true")
-parser.add_argument(
-    '--version',
-    action='version',
-    version='0.1.0')
 
-args = parser.parse_args()
+def main():
+    # parse command line arguments
+    parser = argparse.ArgumentParser(description=tool_description,
+                                     epilog=epilog,
+                                     formatter_class=DefaultsRawDescriptionHelpFormatter)
+    # positional arguments
+    parser.add_argument(
+        "events",
+        help="Path to bed6 file containing alignments.")
+    # optional arguments
+    parser.add_argument(
+        "-o", "--outfile",
+        help="Write results to this file.")
+    parser.add_argument(
+        "-t", "--threshold",
+        type=float,
+        default=0.1,
+        help="Threshold for spurious event removal."
+    )
+    # misc arguments
+    parser.add_argument(
+        "-v", "--verbose",
+        help="Be verbose.",
+        action="store_true")
+    parser.add_argument(
+        "-d", "--debug",
+        help="Print lots of debugging information",
+        action="store_true")
+    parser.add_argument(
+        '--version',
+        action='version',
+        version='0.1.0')
 
-if args.debug:
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
-elif args.verbose:
-    logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
-else:
-    logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
-logging.info("Parsed arguments:")
-logging.info("  alignments: '{}'".format(args.events))
-logging.info("  threshold: '{}'".format(args.threshold))
-if args.outfile:
-    logging.info("  outfile: enabled writing to file")
-    logging.info("  outfile: '{}'".format(args.outfile))
-logging.info("")
+    args = parser.parse_args()
 
-# check threshold parameter value
-if args.threshold < 0 or args.threshold > 1:
-    raise ValueError("Threshold must be in [0,1].")
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
+    elif args.verbose:
+        logging.basicConfig(level=logging.INFO, format="%(filename)s - %(levelname)s - %(message)s")
+    else:
+        logging.basicConfig(format="%(filename)s - %(levelname)s - %(message)s")
+    logging.info("Parsed arguments:")
+    logging.info("  alignments: '{}'".format(args.events))
+    logging.info("  threshold: '{}'".format(args.threshold))
+    if args.outfile:
+        logging.info("  outfile: enabled writing to file")
+        logging.info("  outfile: '{}'".format(args.outfile))
+    logging.info("")
 
-# load alignments
-alns = pd.read_csv(
-    args.events,
-    sep="\t",
-    names=["chrom", "start", "stop", "read_id", "score", "strand"])
+    # check threshold parameter value
+    if args.threshold < 0 or args.threshold > 1:
+        raise ValueError("Threshold must be in [0,1].")
 
-# remove all alignments that not enough PCR duplicates with respect to
-# the group maximum
-grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
-alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
+    # load alignments
+    alns = pd.read_csv(
+        args.events,
+        sep="\t",
+        names=["chrom", "start", "stop", "read_id", "score", "strand"])
 
-# write coordinates of crosslinking event alignments
-alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
-alns_cleaned.to_csv(
-    alns_cleaned_out,
-    columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
-    sep="\t", index=False, header=False)
-alns_cleaned_out.close()
+    # remove all alignments that not enough PCR duplicates with respect to
+    # the group maximum
+    grouped = alns.groupby(['chrom', 'start', 'stop', 'strand'], group_keys=False)
+    alns_cleaned = grouped.apply(lambda g: g[g["score"] >= args.threshold * g["score"].max()])
+
+    # write coordinates of crosslinking event alignments
+    alns_cleaned_out = (open(args.outfile, "w") if args.outfile is not None else stdout)
+    alns_cleaned.to_csv(
+        alns_cleaned_out,
+        columns=['chrom', 'start', 'stop', 'read_id', 'score', 'strand'],
+        sep="\t", index=False, header=False)
+    alns_cleaned_out.close()
+
+if __name__ == "__main__":
+    main()
