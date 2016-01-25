@@ -6,11 +6,8 @@ from sys import stdout
 from subprocess import check_call
 from shutil import rmtree
 from tempfile import mkdtemp
+import os
 from os.path import isfile
-# avoid ugly python IOError when stdout output is piped into another program
-# and then truncated (such as piping to head)
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Remove spurious events originating from errors in random sequence tags.
@@ -106,7 +103,7 @@ def main():
         logging.debug("tmpdir: " + tmpdir)
 
         # prepare barcode library
-        syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl /home/maticzkd/co/bctools/bin/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
+        syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl " + os.path.dirname(os.path.realpath(__file__)) + "/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
         check_call(syscall, shell=True)
     finally:
         logging.debug("removed tmpdir: " + tmpdir)
