@@ -22,7 +22,7 @@ Output:
 
 Example usage:
 - remove spurious events from spurious.bed and write results to file cleaned.bed
-rm_spurious_events.py spurious.bed --out cleaned.bed
+rm_spurious_events.py spurious.bed --oufile cleaned.bed
 """
 
 epilog = """
