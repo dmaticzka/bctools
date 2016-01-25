@@ -19,8 +19,6 @@ This script compares all events sharing the same coordinates. Among each group
 of events the maximum number of PCR duplicates is determined. All events that
 are supported by less than 10 percent of this maximum count are removed.
 
-By default output is written to stdout.
-
 Input:
 * bed6 file containing crosslinking events with score field set to number of PCR
   duplicates
@@ -61,6 +59,7 @@ def main():
     # optional arguments
     parser.add_argument(
         "-o", "--outfile",
+        required=True,
         help="Write results to this file.")
     parser.add_argument(
         "-t", "--threshold",
@@ -107,8 +106,7 @@ def main():
         logging.debug("tmpdir: " + tmpdir)
 
         # prepare barcode library
-        # syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > " + tmpdir + "/bclib.csv"
-        syscall = "cat " + args.events + " | sort -k1,1 -k6,6 -k2,2n -k3,3 -k5,5nr | perl /home/maticzkd/co/bctools/bin/rm_spurious_events.pl | bedtools sort > " + args.outfile
+        syscall = "cat " + args.events + " | sort -k1,1V -k6,6 -k2,2n -k3,3 -k5,5nr | perl /home/maticzkd/co/bctools/bin/rm_spurious_events.pl --frac_max " + str(args.threshold) + "| sort -k1,1V -k2,2n -k3,3n -k6,6 -k4,4 -k5,5nr > " + args.outfile
         check_call(syscall, shell=True)
     finally:
         logging.debug("removed tmpdir: " + tmpdir)
