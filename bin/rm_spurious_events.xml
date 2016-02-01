@@ -1,9 +1,5 @@
 <tool id="rm_spurious_events.py" name="Remove spurious" version="0.1.0">
   <description>crosslinking events</description>
-  <requirements>
-      <requirement type="package" version="5.18.1">perl</requirement>
-      <requirement type="package" version="8.22">gnu_coreutils</requirement>
-  </requirements>
   <macros>
     <import>macros.xml</import>
   </macros>

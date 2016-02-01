@@ -8,6 +8,8 @@
             <requirement type="package" version="0.6.9">pybedtools</requirement>
             <!-- <requirement type="package" version="2.24">bedtools</requirement> -->
             <requirement type="package" version="0.8.3">pysam</requirement>
+            <requirement type="package" version="4.1.0">gnu_awk</requirement>
+            <requirement type="package" version="8.22">gnu_coreutils</requirement>
         </requirements>
     </xml>
     <xml name="stdio">
