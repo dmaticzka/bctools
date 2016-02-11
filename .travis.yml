@@ -18,7 +18,7 @@ install:
   - conda install --yes biopython
   - conda install --yes -c http://conda.anaconda.org/bioconda pybedtools
   - conda install --yes -c http://conda.anaconda.org/biobuilds bedtools
-  - conda install -c https://conda.anaconda.org/bioconda datamash
+  - conda install --yes -c https://conda.anaconda.org/bioconda datamash
   # packages for running tests
   - pip install setuptools
   - pip install flake8
