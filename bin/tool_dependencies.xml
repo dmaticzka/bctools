@@ -6,9 +6,6 @@
     <!-- <package name="biopython" version="1.65">
         <repository name="package_biopython_1_65" owner="biopython"/>
     </package> -->
-    <package name="pandas" version="0.16">
-        <repository name="package_python_2_7_pandas_0_16" owner="iuc"/>
-    </package>
     <!-- <package name="pybedtools" version="0.7.4">
         <repository name="package_python_2_7_pybedtools_0_7_4" owner="iuc"/>
     </package> -->
