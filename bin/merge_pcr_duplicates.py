@@ -104,16 +104,12 @@ try:
     tmpdir = mkdtemp()
     logging.debug("tmpdir: " + tmpdir)
 
-    # prepare barcode library
-    syscall1 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 > " + tmpdir + "/bclib.csv"
-    check_call(syscall1, shell=True)
-
     # prepare alinments
     syscall2 = "cat " + args.alignments + " | awk -F \"\\t\" 'BEGIN{OFS=\"\\t\"}{split($4, a, \" \"); $4 = a[1]; print}'| sort -k4,4 > " + tmpdir + "/alns.csv"
     check_call(syscall2, shell=True)
 
     # join barcode library and alignments
-    syscall3 = "join -1 1 -2 4 " + tmpdir + "/bclib.csv " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > " + tmpdir + "/bcalib.csv"
+    syscall3 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort -k1,1 | join -1 1 -2 4 - " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > " + tmpdir + "/bcalib.csv"
     check_call(syscall3, shell=True)
 
     # get alignments combined with barcodes
