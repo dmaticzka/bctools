@@ -72,24 +72,6 @@ def test_call_fileout_fastalib():
     ))
 
 
-def test_call_stdout():
-    "Call merge_pcr_duplicates.py with infile."
-    infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict.fastq"
-    outfile = "stdout_merged_pcr_dupes.bed"
-    run = env.run(
-        bindir_rel + "merge_pcr_duplicates.py",
-        datadir_rel + infile,
-        datadir_rel + inlib,
-    )
-    with open(testdir + outfile, "w") as b:
-        b.write(run.stdout)
-    assert(cmp(
-        testdir + outfile,
-        datadir + "merged_pcr_dupes.bed"
-    ))
-
-
 def test_call_no_readids_in_common():
     "Call merge_pcr_duplicates.py with a library that includes none of the required ids."
     infile = "pcr_dupes_sorted_2.bed"
@@ -105,23 +87,24 @@ def test_call_no_readids_in_common():
     assert(run.returncode == 1)
 
 
-def test_call_barcodes_not_available_for_all_entries():
-    "Call merge_pcr_duplicates.py with missing barcodes."
-    infile = "pcr_dupes_sorted_2.bed"
-    inlib = "pcr_dupes_randomdict_missingsome.fastq"
-    outfile = "merged_pcr_dupes_incomplete.bed"
-    run = env.run(
-        bindir_rel + "merge_pcr_duplicates.py",
-        datadir_rel + infile,
-        datadir_rel + inlib,
-        "--outfile", outfile,
-        expect_stderr=True,
-    )
-    assert(cmp(
-        testdir + outfile,
-        datadir + "merged_pcr_dupes_incomplete.bed"
-    ))
-    assert re.search("WARNING", run.stderr), "stderr should contain 'WARNING', was '{}'".format(run.stderr)
+# possibly reimplement this functionality, not required though
+# def test_call_barcodes_not_available_for_all_entries():
+#     "Call merge_pcr_duplicates.py with missing barcodes."
+#     infile = "pcr_dupes_sorted_2.bed"
+#     inlib = "pcr_dupes_randomdict_missingsome.fastq"
+#     outfile = "merged_pcr_dupes_incomplete.bed"
+#     run = env.run(
+#         bindir_rel + "merge_pcr_duplicates.py",
+#         datadir_rel + infile,
+#         datadir_rel + inlib,
+#         "--outfile", outfile,
+#         expect_stderr=True,
+#     )
+#     assert(cmp(
+#         testdir + outfile,
+#         datadir + "merged_pcr_dupes_incomplete.bed"
+#     ))
+#     assert re.search("WARNING", run.stderr), "stderr should contain 'WARNING', was '{}'".format(run.stderr)
 
 
 def test_call_barcodes_withN():

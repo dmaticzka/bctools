@@ -11,6 +11,7 @@
             <requirement type="package" version="4.1.0">gnu_awk</requirement>
             <requirement type="package" version="8.22">gnu_coreutils</requirement>
             <requirement type="package" version="5.18.1">perl</requirement>
+            <requirement type="package" version="1.0.6">datamash</requirement>
         </requirements>
     </xml>
     <xml name="stdio">

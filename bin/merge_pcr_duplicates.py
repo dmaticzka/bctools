@@ -3,7 +3,6 @@
 import argparse
 import logging
 from sys import stdout
-import pandas as pd
 from subprocess import check_call
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -16,8 +15,7 @@ signal(SIGPIPE, SIG_DFL)
 tool_description = """
 Merge PCR duplicates according to random barcode library.
 
-Barcodes containing uncalled base 'N' are removed. By default output is written
-to stdout.
+Barcodes containing uncalled base 'N' are removed.
 
 Input:
 * bed6 file containing alignments with fastq read-id in name field
@@ -30,7 +28,7 @@ Output:
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file
   merged.bed:
-merge_pcr_duplicates.py duplicates.bed bclibrary.fa --out merged.bed
+merge_pcr_duplicates.py duplicates.bed bclibrary.fa --outfile merged.bed
 """
 
 epilog = """
@@ -55,6 +53,7 @@ parser.add_argument(
 # optional arguments
 parser.add_argument(
     "-o", "--outfile",
+    required=True,
     help="Write results to this file.")
 # misc arguments
 parser.add_argument(
@@ -109,48 +108,9 @@ try:
     check_call(syscall2, shell=True)
 
     # join barcode library and alignments
-    syscall3 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort --compress-program=gzip -k1,1 | join -1 1 -2 4 - " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}{print $3,$4,$5,$2,$6,$7}' > " + tmpdir + "/bcalib.csv"
+    syscall3 = "cat " + args.bclib + " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' | sort --compress-program=gzip -k1,1 | join -1 1 -2 4 - " + tmpdir + "/alns.csv " + " | awk 'BEGIN{OFS=\"\\t\"}$4!~/N/{print $3,$4,$5,$2,$6,$7}' | datamash --sort -g 1,2,3,4,6 count 4 | awk 'BEGIN{OFS=\"\\t\"}$4!~/N/{print $1,$2,$3,$4,$6,$5}' > " + args.outfile
+    # 'chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'
     check_call(syscall3, shell=True)
-
-    # get alignments combined with barcodes
-    bcalib = pd.read_csv(
-        tmpdir + "/bcalib.csv",
-        sep="\t",
-        names=["chrom", "start", "stop", "bc", "score", "strand"])
 finally:
     logging.debug("removed tmpdir: " + tmpdir)
     rmtree(tmpdir)
-
-# fail if alignments given but combined library is empty
-if bcalib.empty:
-    raise Exception("ERROR: no common entries for alignments and barcode library found. Please check your input files.")
-
-# warn if not all alignments could be assigned a barcode
-n_bcalib = len(bcalib.index)
-if n_bcalib < n_alns:
-    logging.warning(
-        "{} of {} alignments could not be associated with a random barcode.".format(n_alns - n_bcalib, n_alns))
-
-# remove entries with barcodes that has uncalled base N
-bcalib_cleaned = bcalib.drop(bcalib[bcalib.bc.str.contains("N")].index)
-n_bcalib_cleaned = len(bcalib_cleaned)
-# if n_bcalib_cleaned < n_bcalib:
-#     msg = "{} of {} alignments had random barcodes containing uncalled bases and were dropped.".format(
-#         n_bcalib - n_bcalib_cleaned, n_bcalib)
-#     if n_bcalib_cleaned < (0.8 * n_bcalib):
-#         logging.warning(msg)
-#     else:
-#         logging.info(msg)
-
-# count and merge pcr duplicates
-# grouping sorts by keys, so the ouput will be properly sorted
-merged = bcalib_cleaned.groupby(['chrom', 'start', 'stop', 'strand', 'bc']).size().reset_index()
-merged.rename(columns={0: 'ndupes'}, copy=False, inplace=True)
-
-# write coordinates of crosslinking event alignments
-eventalnout = (open(args.outfile, "w") if args.outfile is not None else stdout)
-merged.to_csv(
-    eventalnout,
-    columns=['chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'],
-    sep="\t", index=False, header=False)
-eventalnout.close()
