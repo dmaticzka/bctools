@@ -19,6 +19,7 @@ install:
   - conda install --yes pandas
   - conda install --yes -c http://conda.anaconda.org/bioconda pybedtools
   - conda install --yes -c http://conda.anaconda.org/biobuilds bedtools
+  - conda install --yes datamash
   # packages for running tests
   - pip install setuptools
   - pip install flake8
