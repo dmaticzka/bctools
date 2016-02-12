@@ -1,18 +1,4 @@
 <macros>
-    <xml name="requirements">
-        <requirements>
-            <requirement type="package" version="1.66">biopython</requirement>
-            <!-- <requirement type="package" version="1.65">biopython</requirement> -->
-            <!-- <requirement type="package" version="0.7.4">pybedtools</requirement> -->
-            <requirement type="package" version="0.6.9">pybedtools</requirement>
-            <!-- <requirement type="package" version="2.24">bedtools</requirement> -->
-            <requirement type="package" version="0.8.3">pysam</requirement>
-            <requirement type="package" version="4.1.0">gnu_awk</requirement>
-            <requirement type="package" version="8.22">gnu_coreutils</requirement>
-            <requirement type="package" version="5.18.1">perl</requirement>
-            <requirement type="package" version="1.0.6">datamash</requirement>
-        </requirements>
-    </xml>
     <xml name="stdio">
         <stdio>
           <exit_code level="fatal" range="1:"/>

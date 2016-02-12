@@ -1,9 +1,14 @@
 <tool id="extract_aln_ends.py" name="Extract alignment ends." version="0.2.0">
   <description>from SAM or BAM.</description>
+  <xml name="requirements">
+      <requirements>
+          <requirement type="package" version="0.6.9">pybedtools</requirement>
+          <requirement type="package" version="0.8.3">pysam</requirement>
+      </requirements>
+  </xml>
   <macros>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements" />
   <expand macro="stdio" />
   <version_command>python $__tool_directory__/extract_aln_ends.py --version</version_command>
   <command interpreter="python"><![CDATA[
