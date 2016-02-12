@@ -15,7 +15,7 @@ $positional_1
 $positional_2
 #end if
 
-> $default]]></command>
+--outfile $default]]></command>
   <inputs>
     <param area="false" label="bed6 file containing alignments." name="positional_1" type="data" format="bed"/>
     <param area="false" label="fastaq barcode library." name="positional_2" type="data" format="fastq"/>
