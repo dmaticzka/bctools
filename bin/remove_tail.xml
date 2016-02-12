@@ -1,10 +1,8 @@
 <tool id="remove_tail.py" name="Remove 3'-end nts" version="0.1.0">
   <description>from FASTQ</description>
-  <xml name="requirements">
-      <requirements>
-          <requirement type="package" version="1.66">biopython</requirement>
-      </requirements>
-  </xml>
+  <requirements>
+      <requirement type="package" version="1.66">biopython</requirement>
+  </requirements>
   <macros>
     <import>macros.xml</import>
   </macros>

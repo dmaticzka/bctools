@@ -1,12 +1,10 @@
 <tool id="merge_pcr_duplicates.py" name="Merge PCR duplicates" version="0.2.0">
   <description>according to random barcode library.</description>
-  <xml name="requirements">
-      <requirements>
-          <requirement type="package" version="4.1.0">gnu_awk</requirement>
-          <requirement type="package" version="8.22">gnu_coreutils</requirement>
-          <requirement type="package" version="1.0.6">datamash</requirement>
-      </requirements>
-  </xml>
+  <requirements>
+      <requirement type="package" version="4.1.0">gnu_awk</requirement>
+      <requirement type="package" version="8.22">gnu_coreutils</requirement>
+      <requirement type="package" version="1.0.6">datamash</requirement>
+  </requirements>
   <macros>
     <import>macros.xml</import>
   </macros>

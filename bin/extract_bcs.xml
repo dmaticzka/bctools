@@ -1,10 +1,8 @@
 <tool id="extract_bcs.py" name="Extract barcodes" version="1.0.0">
   <description>using pattern.</description>
-  <xml name="requirements">
-      <requirements>
-          <requirement type="package" version="1.66">biopython</requirement>
-      </requirements>
-  </xml>
+  <requirements>
+      <requirement type="package" version="1.66">biopython</requirement>
+  </requirements>
   <macros>
     <import>macros.xml</import>
   </macros>
