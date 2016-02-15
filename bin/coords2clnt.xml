@@ -1,9 +1,11 @@
 <tool id="coords2clnt.py" name="Get crosslinked nucleotides" version="0.1.0">
   <description>from full alignments</description>
+  <requirements>
+      <requirement type="package" version="0.6.9">pybedtools</requirement>
+  </requirements>
   <macros>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements" />
   <expand macro="stdio" />
   <stdio>
     <exit_code level="fatal" range="1:"/>
