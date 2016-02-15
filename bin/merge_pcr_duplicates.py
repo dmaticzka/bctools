@@ -108,14 +108,15 @@ try:
     check_call(syscall2, shell=True)
 
     # join barcode library and alignments
+    # after join: id, bc, chr, start, stop, mapscore, strand
+    # after datamash: bc, chr, start, stop, strand, ndupes, idrepresentative
     syscall3 = "cat " + \
         args.bclib + \
         " | awk 'BEGIN{OFS=\"\\t\"}NR%4==1{gsub(/^@/,\"\"); id=$1}NR%4==2{bc=$1}NR%4==3{print id,bc}' " + \
         " | sort --compress-program=gzip -k1,1 | join -1 1 -2 4 - " + tmpdir + "/alns.csv " + \
-        " | awk 'BEGIN{OFS=\"\\t\"}$4!~/N/{print $3,$4,$5,$2,$6,$7}' " + \
-        " | datamash --sort -g 1,2,3,4,6 count 4 " + \
-        " | awk 'BEGIN{OFS=\"\\t\"}$4!~/N/{print $1,$2,$3,$4,$6,$5}' > " + args.outfile
-    # 'chrom', 'start', 'stop', 'bc', 'ndupes', 'strand'
+        " | awk 'BEGIN{OFS=\"\\t\"}$2!~/N/{print $1,$2,$3,$4,$5,$6,$7}' " + \
+        " | datamash --sort -g 2,3,4,5,7 count 2 first 1 " + \
+        " | awk 'BEGIN{OFS=\"\\t\"}{print $2,$3,$4,$7,$6,$5}' > " + args.outfile
     check_call(syscall3, shell=True)
 finally:
     logging.debug("removed tmpdir: " + tmpdir)
