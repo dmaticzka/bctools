@@ -16,7 +16,7 @@
 
     <version_command>flexbar --version</version_command>
 
-    <command>
+    <command><![CDATA[
 
         flexbar
 
@@ -102,12 +102,12 @@
             $cLogging.rndTags
         #end if
 
-        > $output;
+        && mv flexbar_1.fastq $output_1
+        && mv flexbar_2.fastq $output_2
 
-        mv flexbar_1.fastq $output_1;
-        mv flexbar_2.fastq $output_2;
+        && sleep 20
 
-    </command>
+    ]]></command>
 
 
     <inputs>

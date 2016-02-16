@@ -14,7 +14,7 @@
 
     <version_command>flexbar --version</version_command>
 
-    <command>
+    <command><![CDATA[
 
         flexbar
 
@@ -49,14 +49,16 @@
         --max-uncalled $maxUncalled
         --min-read-length $minReadLen
 
-        > $output;
+        > $output
 
-        mv flexbar_barcode_repA_1.fastq $output_repA_1;
-        mv flexbar_barcode_repA_2.fastq $output_repA_2;
-        mv flexbar_barcode_repB_1.fastq $output_repB_1;
-        mv flexbar_barcode_repB_2.fastq $output_repB_2;
+        && mv flexbar_barcode_repA_1.fastq $output_repA_1
+        && mv flexbar_barcode_repA_2.fastq $output_repA_2
+        && mv flexbar_barcode_repB_1.fastq $output_repB_1
+        && mv flexbar_barcode_repB_2.fastq $output_repB_2
 
-    </command>
+        && sleep 20
+
+    ]]></command>
 
 
     <inputs>
