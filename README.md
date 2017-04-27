@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tzk/bctools.svg?branch=master)](https://travis-ci.org/tzk/bctools)
+[![Build Status](https://travis-ci.org/tzk/bctools.svg?branch=master)](https://travis-ci.org/dmaticzka/bctools)
 
 # bctools
 Set of tools for handling barcodes in NGS data.
