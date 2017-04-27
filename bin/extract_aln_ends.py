@@ -50,6 +50,7 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
     # To join the behaviour of RawDescriptionHelpFormatter with that of ArgumentDefaultsHelpFormatter
     pass
 
+
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
                                  epilog=epilog,
