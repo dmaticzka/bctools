@@ -82,6 +82,7 @@ def translate_nt_to_RY_iterator(robj):
             record.letter_annotations = saved_letter_annotations
         yield record
 
+
 # handle arguments
 args = parser.parse_args()
 if args.debug:
