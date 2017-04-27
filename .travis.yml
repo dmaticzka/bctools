@@ -1,29 +1,34 @@
 language: python
 python:
   - "2.7"
-  # - "3.4"
-sudo: false
-before_install:
-  # setup miniconda distribution
-  - travis_retry wget http://repo.continuum.io/miniconda/Miniconda-3.8.3-Linux-x86_64.sh -O miniconda.sh
-  - chmod +x miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH=$HOME/miniconda/bin:$PATH
-  - conda update --yes conda
+  #- "3.4"
 install:
-  # packages from anaconda distribution
-  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
-  - source activate condaenv
-  - conda install --yes nose
-  - conda install --yes biopython
-  - conda install --yes -c http://conda.anaconda.org/bioconda pybedtools
-  - conda install --yes -c http://conda.anaconda.org/biobuilds bedtools
-  - conda install --yes -c https://conda.anaconda.org/bioconda datamash
-  # packages for running tests
-  - pip install setuptools
-  - pip install flake8
-  # packages specified by setup.py
-  - pip install .
+  - sudo apt-get update
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+
+  # setup bioconda
+  - conda config --add channels conda-forge
+  - conda config --add channels defaults
+  - conda config --add channels r
+  - conda config --add channels bioconda
+
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION nose biopython bedtools pybedtools datamash flake8
+  - source activate test-environment
+  - python setup.py install
+
 script:
   - flake8 . --exclude=.venv --ignore=E501
   - nosetests
