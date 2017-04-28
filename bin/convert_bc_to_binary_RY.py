@@ -21,10 +21,8 @@ convert_bc_to_binary_RY.py in.fa --outfile out.fa
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 # parse command line arguments

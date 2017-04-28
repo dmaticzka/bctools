@@ -21,10 +21,8 @@ remove_tail.py input.fastq 7 --out output.fastq
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 # parse command line arguments

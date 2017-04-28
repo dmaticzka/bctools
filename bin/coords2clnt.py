@@ -29,10 +29,8 @@ coords2clnt.py in.bed --outfile out.bed
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 # parse command line arguments

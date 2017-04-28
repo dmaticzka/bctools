@@ -23,10 +23,8 @@ fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq --bcs 
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 # parse command line arguments

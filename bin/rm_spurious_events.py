@@ -27,10 +27,8 @@ rm_spurious_events.py spurious.bed --oufile cleaned.bed
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 

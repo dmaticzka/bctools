@@ -33,10 +33,8 @@ merge_pcr_duplicates.py duplicates.bed bclibrary.fa --outfile merged.bed
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 """
 
 # parse command line arguments

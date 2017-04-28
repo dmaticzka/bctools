@@ -38,10 +38,8 @@ extract_aln_ends.py input.bam --out output.bed
 
 epilog = """
 Author: Daniel Maticzka
-Copyright: 2015
+Copyright: 2017
 License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Development
 """
 
 
