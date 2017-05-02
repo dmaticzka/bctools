@@ -1,5 +1,5 @@
+from past.builtins import cmp
 import re
-from filecmp import cmp
 from scripttest import TestFileEnvironment
 
 bindir = "bin/"
@@ -17,7 +17,7 @@ def test_call_without_parameters():
         bindir_rel + "coords2clnt.py",
         expect_error=True
     )
-    assert(re.search("too few arguments", run.stderr))
+    assert(re.search("usage", run.stderr))
 
 
 def test_call_fileout():
