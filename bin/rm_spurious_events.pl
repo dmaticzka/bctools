@@ -1,4 +1,4 @@
-#!/usr/local/perl/bin/perl
+#!/usr/bin/env perl
 use feature ':5.10';
 use strict 'vars';
 use warnings;
@@ -11,23 +11,20 @@ use File::Basename;
 
 =head1 NAME
 
-filterSquashedReads.pl --frac_max FLOAT
+rm_spurious_events.pl --frac_max FLOAT
 
 =head1 SYNOPSIS
 
-this script reads sites after pcr duplicate removal.
-for all crosslinking sites sharing start and stop coordinates, the maximum number
-of squashed reads is determined.
-alignments having less than frac_max * max reads are discarded
+This script reads sites after pcr duplicate removal. For all crosslinking sites sharing start and stop coordinates, the maximum number of squashed reads is determined and alignments having less than frac_max * max reads are discarded.
 
-assumes bed entries to be sorted chr,strand,start,stop,score with score descending
+BED entries are assumed to be sorted by chr,strand,start,stop,score with score descending.
 
 Options:
 
     --frac_max  filter out alignments supported by less reads than this fraction of the maximum number of reads per position
-    -debug      enable debug output
-    -help       brief help message
-    -man        full documentation
+    --debug      enable debug output
+    --help       brief help message
+    --man        full documentation
 
 =head1 DESCRIPTION
 
