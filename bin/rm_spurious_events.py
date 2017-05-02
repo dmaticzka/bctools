@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from builtins import str
 import argparse
 import logging
 from subprocess import check_call

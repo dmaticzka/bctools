@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
+from builtins import str
 import argparse
 import logging
-from string import maketrans
 from sys import stdout
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -62,7 +62,7 @@ def translate_nt_to_RY(seq):
     >>> translate_nt_to_RY("ACGUTACGUT")
     RYRYYRYRYY
     """
-    trans_table = maketrans("AGCUT", "RRYYY")
+    trans_table = str.maketrans("AGCUT", "RRYYY")
     trans_seq = seq.translate(trans_table)
     logging.debug(seq + " -> " + trans_seq)
     return trans_seq
