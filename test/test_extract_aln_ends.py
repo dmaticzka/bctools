@@ -1,4 +1,4 @@
-from past.builtins import cmp
+from filecmp import cmp
 import re
 from scripttest import TestFileEnvironment
 
