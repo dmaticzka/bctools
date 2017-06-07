@@ -27,7 +27,6 @@ install:
 
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest biopython bedtools pybedtools perl datamash flake8 future pylint scripttest
   - source activate test-environment
-  - python setup.py install
 
 script:
   - flake8 . --ignore=E501
