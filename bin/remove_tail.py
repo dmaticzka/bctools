@@ -42,10 +42,6 @@ parser.add_argument(
     "-d", "--debug",
     help="Print lots of debugging information",
     action="store_true")
-parser.add_argument(
-    '--version',
-    action='version',
-    version='0.1.0')
 
 args = parser.parse_args()
 if args.debug:
