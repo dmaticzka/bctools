@@ -31,5 +31,5 @@ install:
 
 script:
   - flake8 . --ignore=E501
-  - pylint bin/*py --py3k -E
+  - pylint bin/*py test/*.py --py3k -E
   - pytest
