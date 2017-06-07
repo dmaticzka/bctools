@@ -1,12 +1,13 @@
 [![Build Status](https://travis-ci.org/dmaticzka/bctools.svg?branch=master)](https://travis-ci.org/dmaticzka/bctools)
 
 # bctools
-Set of tools for handling barcodes in NGS data.
+
+Tools for handling barcodes and UMIs in NGS data.
 
 ## Installation
 
-You can install bctools with pip directly from github.
+bctools is available via [bioconda](https://bioconda.github.io) and can be easily installed via
 
 ```bash
-pip install git+https://github.com/tzk/bctools.git --user
+conda install bctools -c bioconda -c conda-forge
 ```
