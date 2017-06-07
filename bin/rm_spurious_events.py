@@ -26,12 +26,6 @@ Example usage:
 rm_spurious_events.py spurious.bed --oufile cleaned.bed
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 
 class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,
                                           argparse.RawDescriptionHelpFormatter):
@@ -42,7 +36,6 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
 def main():
     # parse command line arguments
     parser = argparse.ArgumentParser(description=tool_description,
-                                     epilog=epilog,
                                      formatter_class=DefaultsRawDescriptionHelpFormatter)
     # positional arguments
     parser.add_argument(

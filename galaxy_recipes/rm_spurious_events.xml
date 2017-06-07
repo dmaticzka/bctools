@@ -46,12 +46,6 @@ Input::
 Output::
 
 * bed6 file with spurious crosslinking events removed, sorted by fields chrom, start, stop, strand
-
-Author: Daniel Maticzka
-Copyright: 2015
-License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 ]]></help>
   <expand macro="citations" />
 </tool>

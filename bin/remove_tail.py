@@ -10,7 +10,7 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
-Remove a certain number of nucleotides from the 3'-tails of sequences in fastq
+Remove a certain number of nucleotides from the 3'-tails of sequences in FASTQ
 format.
 
 Example usage:
@@ -19,15 +19,8 @@ Example usage:
 remove_tail.py input.fastq 7 --out output.fastq
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(

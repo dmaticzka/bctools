@@ -32,19 +32,14 @@ $positional_1
     </test>
   </tests>
   <help><![CDATA[
-Given coordinates of the aligned reads, calculate positions of the crosslinked nucleotides.
-Crosslinked nts are assumed to be one nt upstream of the 5'-end of the read.
+Given coordinates of aligned reads in bed format, calculate positions of the
+crosslinked nucleotides. Crosslinked nts are assumed to be one nt upstream of
+the 5'-end of the read.
 
 Input:
 
 * bed6 file containing coordinates of aligned reads
 * bed6 file containing coordinates of crosslinking events
-
-Author: Daniel Maticzka
-Copyright: 2015
-License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 ]]></help>
   <expand macro="citations" />
 </tool>

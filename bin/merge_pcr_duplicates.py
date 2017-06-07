@@ -13,7 +13,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
-Merge PCR duplicates according to random barcode library.
+Merge PCR duplicates according to random barcode library. All alignments with
+same outer coordinates and barcode will be merged into a single crosslinking
+event.
 
 Barcodes containing uncalled base 'N' are removed.
 
@@ -22,8 +24,9 @@ Input:
 * fastq library of random barcodes
 
 Output:
-* bed6 file with random barcode in name field and number of PCR duplicates as
-  score, sorted by fields chrom, start, stop, strand, name
+* bed6 file with a read id from a representative alignment in the name field and
+  number of PCR duplicates as score, sorted by fields chrom, start, stop,
+  strand, name
 
 Example usage:
 - read PCR duplicates from file duplicates.bed and write merged results to file
@@ -31,15 +34,8 @@ Example usage:
 merge_pcr_duplicates.py duplicates.bed bclibrary.fa --outfile merged.bed
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(

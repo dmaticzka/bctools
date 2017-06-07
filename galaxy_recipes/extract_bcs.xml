@@ -23,7 +23,7 @@ $positional_2
 > $default]]></command>
   <inputs>
     <param area="false" label="Barcoded sequences." name="positional_1" type="data" format="fastq"/>
-    <param area="false" label="Pattern of barcode nucleotides starting at 5'-end. X positions will be moved to the header, N positions will be kept." name="positional_2" type="text"/>
+    <param area="false" label="Pattern of barcode nucleotides starting at 5'-end. X positions will be moved to a separate file, N positions will be kept." name="positional_2" type="text"/>
   </inputs>
   <outputs>
     <data hidden="false" name="default" format="fastq"/>
@@ -39,12 +39,6 @@ $positional_2
   </tests>
   <help><![CDATA[
 Exract barcodes from a FASTQ file according to a user-specified pattern.
-
-Author: Daniel Maticzka
-Copyright: 2015
-License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
 ]]></help>
   <expand macro="citations" />
 </tool>

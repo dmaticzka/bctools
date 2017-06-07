@@ -11,9 +11,9 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
-Given coordinates of the aligned reads, calculate positions of the crosslinked
-nucleotides. Crosslinked nts are assumed to be one nt upstream of the 5'-end of
-the read.
+Given coordinates of aligned reads in bed format, calculate positions of the
+crosslinked nucleotides. Crosslinked nts are assumed to be one nt upstream of
+the 5'-end of the read.
 
 By default output is written to stdout.
 
@@ -27,15 +27,8 @@ Example usage:
 coords2clnt.py in.bed --outfile out.bed
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(

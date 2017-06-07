@@ -9,25 +9,19 @@ from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 
 tool_description = """
-Convert standard nucleotides to IUPAC nucleotide codes used for binary barcodes.
+Convert standard nucleotides in FASTQ or FASTA format to IUPAC nucleotide codes
+used for binary RY-space barcodes.
 
-A and G are converted to nucleotide code R. T, U and C are converted to Y. By
-default output is written to stdout.
+A and G are converted to R. T, U and C are converted to Y. By default output is
+written to stdout.
 
 Example usage:
 - write converted sequences from file in.fa to file file out.fa:
-convert_bc_to_binary_RY.py in.fa --outfile out.fa
-"""
-
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
+convert_bc_to_binary_RY.py in.fastq --outfile out.fastq
 """
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
@@ -38,7 +32,7 @@ parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
 parser.add_argument(
-    "--fasta-format",
+    "-f", "--fasta-format",
     dest="fasta_format",
     help="Read and write fasta instead of fastq format.",
     action="store_true")

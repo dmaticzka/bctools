@@ -35,24 +35,20 @@ $positional_2
     </test>
   </tests>
   <help><![CDATA[
-Merge PCR duplicates according to random barcode library.
+Merge PCR duplicates according to random barcode library. All alignments with
+same outer coordinates and barcode will be merged into a single crosslinking
+event.
 
 Barcodes containing uncalled base 'N' are removed.
 
-Input::
-
+Input:
 * bed6 file containing alignments with fastq read-id in name field
 * fastq library of random barcodes
 
-Output::
-
-* bed6 file with random barcode in name field and number of PCR duplicates as score, sorted by fields chrom, start, stop, strand, name
-
-Author: Daniel Maticzka
-Copyright: 2015
-License: Apache
-Email: maticzkd@informatik.uni-freiburg.de
-Status: Testing
+Output:
+* bed6 file with a read id from a representative alignment in the name field and
+number of PCR duplicates as score, sorted by fields chrom, start, stop,
+strand, name
 ]]></help>
   <expand macro="citations" />
 </tool>

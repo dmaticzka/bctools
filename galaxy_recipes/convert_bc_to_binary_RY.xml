@@ -40,8 +40,6 @@ The input for this tool is a fastq file.
 **Output**
 
 This tool produces a single fastq file containing the converted barcodes.
-
-** References **
 ]]></help>
   <expand macro="citations" />
 </tool>

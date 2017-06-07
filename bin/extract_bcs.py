@@ -11,7 +11,7 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
-Exract barcodes from a FASTQ file according to a user-specified pattern.
+Exract barcodes from a FASTQ file according to a user-specified pattern. Starting from the 5'-end, positions marked by X will be moved into a separate FASTQ file. Positions marked bv N will be kept.
 
 By default output is written to stdout.
 
@@ -21,15 +21,8 @@ Example usage:
 fastq_extract_barcodes.py barcoded_input.fastq XXXNNXX --out output.fastq --bcs barcodes.fastq
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(

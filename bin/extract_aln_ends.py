@@ -13,12 +13,12 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
-Extract alignment ends from sam file.
+Extract alignment ends from sam file and export to bed format.
 
-The resulting bed file contains the outer coordinates of the alignments. The
-bed name field is set to the read id and the score field is set to the edit
-distance of the alignment. The crosslinked nucleotide is one nt upstream of the
-5'-end of the bed entries.
+The resulting bed file contains the outer coordinates of the alignments. The bed
+name field is set to the read id and the score field is set to the edit distance
+of the alignment. The crosslinked nucleotide is one nt upstream of the 5'-end of
+the bed entries.
 
 This script only reports results for alignments that are properly aligned in FR
 ("forward-reverse") direction.
@@ -36,12 +36,6 @@ Example usage:
 extract_aln_ends.py input.bam --out output.bed
 """
 
-epilog = """
-Author: Daniel Maticzka
-Copyright: 2017
-License: Apache
-"""
-
 
 class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,
                                           argparse.RawDescriptionHelpFormatter):
@@ -51,7 +45,6 @@ class DefaultsRawDescriptionHelpFormatter(argparse.ArgumentDefaultsHelpFormatter
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description=tool_description,
-                                 epilog=epilog,
                                  formatter_class=DefaultsRawDescriptionHelpFormatter)
 # positional arguments
 parser.add_argument(
