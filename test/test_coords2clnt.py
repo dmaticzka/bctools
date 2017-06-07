@@ -1,4 +1,4 @@
-from past.builtins import cmp
+from filecmp import cmp
 import re
 from scripttest import TestFileEnvironment
 
@@ -32,6 +32,22 @@ def test_call_fileout():
     assert(cmp(
         testdir + outfile,
         datadir + "merged_pcr_dupes_clnts.bed"
+    ))
+
+
+def test_call_fileout_threeprime():
+    "Call coords2clnt.py with infile and outfile. Use threeprime position."
+    infile = "merged_pcr_dupes.bed"
+    outfile = "merged_pcr_dupes_clnts_threeprime.bed"
+    env.run(
+        bindir_rel + "coords2clnt.py",
+        datadir_rel + infile,
+        "--outfile", outfile,
+        "-3"
+    )
+    assert(cmp(
+        testdir + outfile,
+        datadir + "merged_pcr_dupes_clnts_threeprime.bed"
     ))
 
 

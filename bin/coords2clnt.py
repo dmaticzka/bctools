@@ -5,6 +5,7 @@ import logging
 from sys import stdout
 from pybedtools import BedTool
 from pybedtools.featurefuncs import five_prime
+from pybedtools.featurefuncs import three_prime
 # avoid ugly python IOError when stdout output is piped into another program
 # and then truncated (such as piping to head)
 from signal import signal, SIGPIPE, SIG_DFL
@@ -12,8 +13,8 @@ signal(SIGPIPE, SIG_DFL)
 
 tool_description = """
 Given coordinates of aligned reads in bed format, calculate positions of the
-crosslinked nucleotides. Crosslinked nts are assumed to be one nt upstream of
-the 5'-end of the read.
+crosslinked nucleotides. By default, crosslinked nts are assumed to be one nt
+upstream of the 5'-end of the read.
 
 By default output is written to stdout.
 
@@ -38,6 +39,10 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--outfile",
     help="Write results to this file.")
+parser.add_argument(
+    "-3", "--threeprime",
+    help="Set position one nt downstream of 3'-end as crosslinked nucleotide.",
+    action="store_true")
 parser.add_argument(
     "-v", "--verbose",
     help="Be verbose.",
@@ -64,7 +69,11 @@ logging.info("")
 
 # data processing
 alns = BedTool(args.infile)
-clnts = alns.each(five_prime, upstream=1, downstream=0)
+# select either from 5' or 3'-end
+if args.threeprime:
+    clnts = alns.each(three_prime, upstream=0, downstream=1)
+else:
+    clnts = alns.each(five_prime, upstream=1, downstream=0)
 
 # write to file or to stdout
 if args.outfile:
