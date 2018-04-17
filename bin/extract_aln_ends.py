@@ -90,7 +90,7 @@ try:
 
     # sort by id
     logging.debug("calling samtools sort")
-    pysam.sort(args.infile, "-n", "-o{}".format(fn_sorted), "-T {}".format(tmpdir))
+    pysam.sort(args.infile, "-n", "-o{}".format(fn_sorted), "-T{}".format(tmpdir))
 
     # fix mate information
     # also removes secondary and unmapped reads
